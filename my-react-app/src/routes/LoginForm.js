@@ -23,7 +23,7 @@ const LoginForm = () => {
                 localStorage.setItem("valid", true)
                 navigate('/dashboard')
             } else {
-                setError(result.data.Error)
+                alert("Wrong Credentials")
             }
         })
         .catch(err => console.log(err))

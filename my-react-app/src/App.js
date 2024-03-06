@@ -19,13 +19,14 @@ export default function App() {
   return (
     <div className="App">
       <div>
-        <h1>Welcome!</h1>
+        <h2>Welcome</h2>
 
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Service />} />
           <Route path="/contact" element={<Contact />} />
+         
           <Route
             path="/signup"
             element={<SignupForm onSubmit={handleFormSubmit} />}

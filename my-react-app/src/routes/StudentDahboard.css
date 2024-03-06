@@ -4,13 +4,13 @@
 header {
     background-color: #333;
     color: white;
-    padding: 20px;
+    padding: 10px;
   }
   
   /* Styles for nav */
   nav {
     background-color: #f2f2f2;
-    padding: 10px;
+    padding: 50px;
     margin-bottom: 20px;
   }
   
@@ -29,7 +29,7 @@ header {
   
   /* Styles for section */
   section {
-    padding: 20px;
+    padding: 10px;
   }
   
   /* Styles for footer */

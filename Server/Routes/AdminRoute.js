@@ -8,23 +8,20 @@ import path from "path";
 const router = express.Router();
 
 router.post("/adminlogin", (req, res) => {
-  const sql = "SELECT * from admin Where email = ? and password = ?";
-  con.query(sql, [req.body.email, req.body.password], (err, result) => {
-    if (err) return res.json({ loginStatus: false, Error: "Query error" });
-    if (result.length > 0) {
-      const email = result[0].email;
-      const token = jwt.sign(
-        { role: "admin", email: email, id: result[0].id },
-        "jwt_secret_key",
-        { expiresIn: "1d" }
-      );
-      res.cookie('token', token)
-      return res.json({ loginStatus: true });
-    } else {
-        return res.json({ loginStatus: false, Error:"wrong email or password" });
-    }
-  });
+    const { email, password } = req.body; // Destructure email and password from the request body
+    console.log(email, password);
+    const sql ="SELECT * FROM admin WHERE email = $1 AND password = $2;";
+    con.query(sql, [email, password], (err, result) => {
+      if (err) return res.json({ loginStatus: false, Error:err.message });
+      console.log(result.rows)
+      if (result.rows.length > 0) {
+        return res.json({ loginStatus: true });
+      } else {
+          return res.json({ loginStatus: false, Error: "wrong email or password" });
+      }
+    });
 });
+
 
 router.get('/category', (req, res) => {
     const sql = "SELECT * FROM category";
@@ -35,7 +32,7 @@ router.get('/category', (req, res) => {
 })
 
 router.post('/add_category', (req, res) => {
-    const sql = "INSERT INTO category (`name`) VALUES (?)"
+    const sql = "INSERT INTO category (`name`) VALUES ($1)"
     con.query(sql, [req.body.category], (err, result) => {
         if(err) return res.json({Status: false, Error: "Query Error"})
         return res.json({Status: true})
