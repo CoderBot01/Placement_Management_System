@@ -1,0 +1,103 @@
+/* placedstudentstyles.css */
+
+.placed {
+  position: relative;
+  bottom: 1000px;
+  left: 1100px;
+  width: 400px;
+  height: 300px;
+  background-color: rgba(174, 25, 25, 0.8);
+  border-radius: 20px;
+  color: #dad6d6;
+  font-size: 16px;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(197, 35, 35, 0.9),
+    rgba(19, 221, 150, 0.6)
+  );
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.placed h1 {
+  font-size: 1.3rem; /* Decreased font size */
+  text-align: center;
+  margin-bottom: 10px; /* Decreased margin */
+  color: white;
+  text-decoration-line: underline;
+}
+
+.placed p {
+  font-size: 0.8rem; /* Decreased font size */
+  text-align: center;
+  margin-bottom: 10px; /* Decreased margin */
+  color: black;
+}
+
+.placedcard {
+  display: flex;
+  gap: 10px; /* Decreased gap */
+  overflow-x: hidden;
+  animation: scroll-left 10s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.p-card {
+  flex: 0 0 auto;
+  width: 200px; /* Decreased width */
+  background-color: #fff;
+  border-radius: 6px; /* Decreased border-radius */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Decreased box shadow */
+  transition: box-shadow 0.3s ease;
+}
+
+.p-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Decreased box shadow */
+}
+
+.p-image {
+  height: 120px; /* Decreased height */
+  overflow: hidden;
+  border-top-left-radius: 6px; /* Decreased border-radius */
+  border-top-right-radius: 6px; /* Decreased border-radius */
+  object-fit: fill;
+}
+
+.p-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+
+.p-card-info {
+  padding: 10px; /* Decreased padding */
+}
+
+.p-card h4 {
+  font-size: 0.9rem; /* Decreased font size */
+  color: black;
+}
+
+.p-card p {
+  font-size: 0.7rem; /* Decreased font size */
+  color: black;
+}
+
+.p-card-info h3 {
+  font-size: 0.9rem; /* Decreased font size */
+  margin-bottom: 8px; /* Decreased margin */
+  color: black;
+}
+
+.p-card-info p {
+  font-size: 0.7rem; /* Decreased font size */
+  margin-bottom: 4px; /* Decreased margin */
+}

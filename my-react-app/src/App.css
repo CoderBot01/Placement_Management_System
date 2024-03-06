@@ -1,0 +1,20 @@
+ * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+/* styles.css */
+
+.signup-link {
+  color: #007bff; /* blue color for signup link */
+  /* Add additional styles for signup link */
+}
+
+.login-link {
+  color: #28a745; /* green color for login link */
+  /* Add additional styles for login link */
+}

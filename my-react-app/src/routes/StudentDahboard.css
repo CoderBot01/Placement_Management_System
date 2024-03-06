@@ -1,0 +1,45 @@
+/* StudentDashboard.css */
+
+/* Styles for header */
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+  }
+  
+  /* Styles for nav */
+  nav {
+    background-color: #f2f2f2;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  nav button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  nav button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Styles for section */
+  section {
+    padding: 20px;
+  }
+  
+  /* Styles for footer */
+  footer {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+  }
+  
