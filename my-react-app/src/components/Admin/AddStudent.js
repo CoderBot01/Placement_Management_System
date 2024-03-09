@@ -106,22 +106,48 @@ function AddStudent() {
       )}
 
       <h2>Student List</h2>
-      <ul>
-        {students.map((student, index) => (
-          <li key={index}>
-            {/* Display all student information */}
-            <strong>Name:</strong> {student.name}, <strong>Department:</strong> {student.department}, <strong>Email:</strong> {student.email}, <strong>Year of Joining:</strong> {student.yearOfJoining}, <strong>Year of Graduation:</strong> {student.yearOfGraduation}
-            {/* Additional fields */}
-            <strong>Phone Number:</strong> {student.phoneNumber}, <strong>Address:</strong> {student.address}, <strong>Resume URL:</strong> {student.resumeURL}, <strong>Graduation Year:</strong> {student.graduationYear}, <strong>GPA:</strong> {student.gpa}
-            <button onClick={() => handleDelete(index)}>Delete</button> {/* Delete button */}
-          </li>
-        ))}
-      </ul>
+     <table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Department</th>
+      <th>Email</th>
+      <th>Year of Joining</th>
+      <th>Year of Graduation</th>
+      <th>Phone Number</th>
+      <th>Address</th>
+      <th>Resume URL</th>
+      <th>Graduation Year</th>
+      <th>GPA</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {students.map((student, index) => (
+      <tr key={index}>
+        <td>{student.name}</td>
+        <td>{student.department}</td>
+        <td>{student.email}</td>
+        <td>{student.yearOfJoining}</td>
+        <td>{student.yearOfGraduation}</td>
+        <td>{student.phoneNumber}</td>
+        <td>{student.address}</td>
+        <td>{student.resumeURL}</td>
+        <td>{student.graduationYear}</td>
+        <td>{student.gpa}</td>
+        <td>
+          <button onClick={() => handleDelete(index)}>Delete</button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
     
       {/* Export button and Select All checkbox */}
       <h2>Export Student List</h2>
       <button onClick={handleExportExcel}>Export as Excel</button>
-      <input type="checkbox" checked={selectAll} onChange={handleSelectAll} /> Select All
+      
     </div>
   );
 }
