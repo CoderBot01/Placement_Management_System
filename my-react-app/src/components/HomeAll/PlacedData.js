@@ -1,4 +1,4 @@
-import "../components/placedstudentstyles.css";
+import "./placedstudentstyles.css";
 
 function PlacedData(props) {
   return (

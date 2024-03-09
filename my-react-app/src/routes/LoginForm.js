@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import "./SignupLogin.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import Navbar from "../components/HomeAll/Navbar";
+import Footer from "../components/HomeAll/Footer";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
+ 
 
 const LoginForm = () => {
 
@@ -20,8 +21,13 @@ const LoginForm = () => {
         axios.post('http://localhost:3000/auth/adminlogin', values)
         .then(result => {
             if(result.data.loginStatus) {
-                localStorage.setItem("valid", true)
-                navigate('/dashboard')
+                if(result.data.role==="admin") {
+                    navigate('/admindashboard')
+                }
+                else if(result.data.role==="student") {
+                    navigate('/dashboard')
+                }
+                
             } else {
                 alert("Wrong Credentials")
             }

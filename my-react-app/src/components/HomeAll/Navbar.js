@@ -29,8 +29,8 @@ const Navbar = () => {
             </Link>
           </li>
         ))}
-        <Link to="/signup">
-          <button>Sign Up</button>
+        <Link to="/AdminDash">
+          <button>Login</button>
         </Link>
       </ul>
     </nav>

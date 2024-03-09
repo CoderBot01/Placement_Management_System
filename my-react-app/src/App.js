@@ -4,9 +4,10 @@ import Home from "./routes/Home";
 import About from "./routes/About";
 import Service from "./routes/Service";
 import Contact from "./routes/Contact";
-import SignupForm from "./routes/SignupForm"; // Import your SignupForm component
-import LoginForm from "./routes/LoginForm"; // Import your LoginForm component
-import StudentDashboard from "./routes/StudentDashboard";
+import LoginForm from "./routes/LoginForm"; 
+import StudentDashboard from "./components/Student/StudentDashboard";
+import AdminDash from "./components/Admin/AdminDash";
+import AddStudent from "./components/Admin/AddStudent";
 
 
 export default function App() {
@@ -18,9 +19,8 @@ export default function App() {
 
   return (
     <div className="App">
-      <div>
-        <h2>Welcome</h2>
 
+      <div>
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -28,14 +28,23 @@ export default function App() {
           <Route path="/contact" element={<Contact />} />
          
           <Route
-            path="/signup"
-            element={<SignupForm onSubmit={handleFormSubmit} />}
+            path="/login"
+            element={<LoginForm onSubmit={handleFormSubmit} />}
           />
           <Route path="/Login" element={<LoginForm />} />
           <Route
             path="/dashboard"
             element={<StudentDashboard {...formData} />}
           />
+          <Route
+            path="/AdminDash"
+            element={<AdminDash {...formData} />}
+          />
+          <Route
+            path="/AddStudent"
+            element={<AddStudent {...formData} />}
+            />
+
         </Routes>
       </div>
       <div className="bottom-buttons"></div>

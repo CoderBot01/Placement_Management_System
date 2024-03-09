@@ -1,6 +1,6 @@
-import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
-import Footer from "../components/Footer";
+import Navbar from "../components/HomeAll/Navbar";
+import Hero from "../components/HomeAll/Hero";
+import Footer from "../components/HomeAll/Footer";
 
 function Service() {
   return (

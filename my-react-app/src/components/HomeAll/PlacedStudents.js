@@ -1,4 +1,4 @@
-import "../components/placedstudentstyles.css";
+import "./placedstudentstyles.css";
 import PlacedData from "./PlacedData";
 
 function PlacedStudents() {

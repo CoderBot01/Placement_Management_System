@@ -1,8 +1,8 @@
-import Hero from "../components/Hero";
-import Navbar from "../components/Navbar";
-import NewsAnnouncement from "../components/NewsAnnouncement";
-import PlacedStudents from "../components/PlacedStudents";
-import Footer from "../components/Footer";
+import Hero from "../components/HomeAll/Hero";
+import Navbar from "../components/HomeAll/Navbar";
+import NewsAnnouncement from "../components/HomeAll/NewsAnnouncement";
+import PlacedStudents from "../components/HomeAll/PlacedStudents";
+import Footer from "../components/HomeAll/Footer";
 
 function Home() {
   return (

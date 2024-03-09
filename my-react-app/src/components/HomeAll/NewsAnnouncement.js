@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import "../components/NewsAnnouncementstyles.css"; // Import your CSS file
+import "./NewsAnnouncementstyles.css"; // Import your CSS file
 
 function AnnouncementComponent() {
   useEffect(() => {

@@ -10,12 +10,13 @@ const router = express.Router();
 router.post("/adminlogin", (req, res) => {
     const { email, password } = req.body; // Destructure email and password from the request body
     console.log(email, password);
-    const sql ="SELECT * FROM admin WHERE email = $1 AND password = $2;";
+    const sql ="SELECT role FROM admin WHERE email = $1 AND password = $2;";
     con.query(sql, [email, password], (err, result) => {
       if (err) return res.json({ loginStatus: false, Error:err.message });
       console.log(result.rows)
+      console.log( result.rows[0].role)
       if (result.rows.length > 0) {
-        return res.json({ loginStatus: true });
+        return res.json({ loginStatus: true , role: result.rows[0].role});
       } else {
           return res.json({ loginStatus: false, Error: "wrong email or password" });
       }

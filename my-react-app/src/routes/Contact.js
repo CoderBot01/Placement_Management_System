@@ -1,7 +1,7 @@
-import Navbar from "../components/Navbar";
-import Hero from "../components/Hero";
-import Footer from "../components/Footer";
-import Contactform from "../components/Contactform";
+import Navbar from "../components/HomeAll/Navbar";
+import Hero from "../components/HomeAll/Hero";
+import Footer from "../components/HomeAll/Footer";
+import Contactform from "../components/HomeAll/Contactform";
 
 function contact() {
   return (
