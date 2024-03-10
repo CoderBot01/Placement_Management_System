@@ -1,9 +1,11 @@
-// Navbar.js
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { MenuItems } from "./menuitems";
 import "./Navbarstyles.css";
+import AdminProfile from "../Admin/Profile";
+import PlacementDash from "../Placement_coor/PlacementDash";
+import StudentDashboard from "../Student/StudentDashboard";
+import AdminDash from "../Admin/AdminDash";
 
 const Navbar = () => {
   const [clicked, setClicked] = useState(false);
@@ -29,9 +31,16 @@ const Navbar = () => {
             </Link>
           </li>
         ))}
-        <Link to="/AdminDash">
-          <button>Login</button>
-        </Link>
+        <li className="login-dropdown">
+          <div className="dropdown">
+            <button className="login-btn">Login</button>
+            <div className="dropdown-content">
+              <Link to="/AdminDash">Admin</Link>
+              <Link to="/PlacementDash">Placement Coordinator</Link>
+              <Link to="/StudentDashboard">Student</Link>
+            </div>
+          </div>
+        </li>
       </ul>
     </nav>
   );

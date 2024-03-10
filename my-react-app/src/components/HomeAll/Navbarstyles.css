@@ -61,6 +61,7 @@ button {
   border: none;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+  color: #1d1dcf;
 }
 
 button:hover {
@@ -111,9 +112,6 @@ button:hover {
     background-color: #01959a;
     transition: none;
   }
-  button {
-    display: none;
-  }
   .nav-links-mobile {
     display: block;
     text-align: center;
@@ -136,4 +134,37 @@ button:hover {
     font-size: 1.2rem;
     color: #222;
   }
+}
+.login-dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #eaefe5;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #725ee7;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.login-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }

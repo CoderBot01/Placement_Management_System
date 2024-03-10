@@ -1,66 +1,103 @@
 import React, { useState } from 'react';
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
 
-function ResumeForm() {
-    const [formData, setFormData] = useState({
-        fullName: '',
-        email: '',
-        phone: '',
-        address: '',
-        summary: '',
-        experience: '',
-        education: ''
+const styles = StyleSheet.create({
+  page: {
+    flexDirection: 'column',
+    padding: 10,
+  },
+  section: {
+    margin: 10,
+    padding: 10,
+    flexGrow: 1,
+  },
+  heading: {
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  label: {
+    marginBottom: 5,
+  },
+  input: {
+    marginBottom: 10,
+    padding: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 3,
+    width: '100%',
+  },
+});
+
+const MyDocument = ({ data }) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.section}>
+        <Text style={styles.heading}>Student Information</Text>
+        <Text style={styles.label}>Name: {data.name}</Text>
+        <Text style={styles.label}>Age: {data.age}</Text>
+        <Text style={styles.label}>Grade: {data.grade}</Text>
+      </View>
+    </Page>
+  </Document>
+);
+
+const Resume = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    age: '',
+    grade: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
+  };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Here you can handle form submission, e.g., send the data to a server
-        console.log(formData);
-    }
-
-    return (
-        <div className="container">
-            <h1>Resume Builder</h1>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="fullName">Full Name:</label>
-                    <input type="text" id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="phone">Phone:</label>
-                    <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="address">Address:</label>
-                    <input type="text" id="address" name="address" value={formData.address} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="summary">Summary:</label>
-                    <textarea id="summary" name="summary" value={formData.summary} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="experience">Experience:</label>
-                    <textarea id="experience" name="experience" value={formData.experience} onChange={handleChange} required />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="education">Education:</label>
-                    <textarea id="education" name="education" value={formData.education} onChange={handleChange} required />
-                </div>
-                <button type="submit">Submit</button>
-            </form>
+  return (
+    <div>
+      <h1>Student Form</h1>
+      <form>
+        <div style={styles.section}>
+          <label style={styles.label}>Name:</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            style={styles.input}
+          />
         </div>
-    );
-}
+        <div style={styles.section}>
+          <label style={styles.label}>Age:</label>
+          <input
+            type="number"
+            name="age"
+            value={formData.age}
+            onChange={handleChange}
+            style={styles.input}
+          />
+        </div>
+        <div style={styles.section}>
+          <label style={styles.label}>Grade:</label>
+          <input
+            type="text"
+            name="grade"
+            value={formData.grade}
+            onChange={handleChange}
+            style={styles.input}
+          />
+        </div>
+        <PDFDownloadLink document={<MyDocument data={formData} />} fileName="student_information.pdf">
+          {({ blob, url, loading, error }) =>
+            loading ? 'Loading document...' : 'Download PDF'
+          }
+        </PDFDownloadLink>
+      </form>
+    </div>
+  );
+};
 
-export default ResumeForm;
+export default Resume;

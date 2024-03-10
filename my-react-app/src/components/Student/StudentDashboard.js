@@ -1,4 +1,3 @@
-// StudentDashboard.js
 import React, { useState } from 'react';
 import "./StudentDahboard.css";
 import ApplyJobPage from "./Applyjob";
@@ -6,7 +5,8 @@ import ResumeForm from "./Resume";
 import TrainingDevelopmentPage from './Training';
 import ViewProfilePage from './View';
 import ProgressPage from './Progress';
-
+import Resume from './Resume';
+import JobRecommendation from './Recommend';
 function StudentDashboard() {
     const [activeTab, setActiveTab] = useState('edit');
 
@@ -15,8 +15,7 @@ function StudentDashboard() {
     };
 
     return (
-        <div>
-            
+        <div className="student-dashboard"> {/* Added class name */}
             <header>
                 <h1>Student Dashboard</h1>
             </header>
@@ -31,15 +30,13 @@ function StudentDashboard() {
             <section>
                 {activeTab === 'view' && <ViewProfilePage/>}
                 {activeTab === 'apply' && <ApplyJobPage />}
-                {activeTab === 'resume' && <ResumeForm/>}
+                {activeTab === 'resume' && <Resume/>}
                 {activeTab === 'training' && <TrainingDevelopmentPage/>}
                 {activeTab === 'progress' && <ProgressPage/>}
-                {activeTab === 'recommendations' && <h2>Job Recommendations</h2>}
+                {activeTab === 'recommendations' && <JobRecommendation/>}
                 {/* Additional content for each section */}
             </section>
-            <footer>
-                <p>&copy; 2024 Student Dashboard</p>
-            </footer>
+          
         </div>
     );
 }

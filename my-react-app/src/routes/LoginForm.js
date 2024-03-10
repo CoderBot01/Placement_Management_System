@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./SignupLogin.css";
 import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
 import Navbar from "../components/HomeAll/Navbar";
 import Footer from "../components/HomeAll/Footer";

@@ -1,33 +1,38 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
-import "./PlacementDash.css"
-
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../Admin/Dash.css';
+import EmployerPage from './Employer';
 
 function PlacementDash() {
-  return (
-    
-      <div>
-        <h1>Placement Coordinator</h1>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/students">Manage Students</Link>
-            </li>
-            <li>
-              <Link to="/employers">Manage Employers</Link>
-            </li>
-            <li>
-              <Link to="/jobs">Manage Jobs</Link>
-            </li>
-          </ul>
-        </nav>
-       
-        
+  const [navbarOpen, setNavbarOpen] = useState(false);
 
-        
-         
-      </div>
-    
+  const toggleNavbar = () => {
+    setNavbarOpen(!navbarOpen);
+  };
+
+  return (
+    <div className="placement-dashboard">
+      <button className="toggle-button" onClick={toggleNavbar}>
+        {navbarOpen ? "Close Navbar" : "Open Navbar"}
+      </button>
+      <h1 className="placement-name">Placement Coordinator</h1> 
+      <nav className={navbarOpen ? "navbar active" : "navbar"}>
+        <ul className="navbar-nav">
+          <li className="nav-item"> 
+            <Link to="/students" className="nav-link">Manage Students</Link>
+          </li>
+          <li className="nav-item"> 
+            <Link to="/EmployerPage" className="nav-link">Manage Employers</Link>
+          </li>
+          <li className="nav-item"> 
+            <Link to="/jobs" className="nav-link">Manage Jobs</Link> 
+          </li>
+          <li className="nav-item"> 
+            <Link to="/schedule" className="nav-link">Schedule Interview</Link> 
+          </li>
+        </ul>
+      </nav>
+    </div>
   );
 }
 

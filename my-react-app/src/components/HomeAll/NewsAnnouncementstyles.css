@@ -21,7 +21,7 @@
 h2 {
   color: rgb(252, 245, 245);
   text-decoration-line: underline;
-  /* Remove align-items: center; */
+  align-items: center; 
 }
 
 .announcement-news {

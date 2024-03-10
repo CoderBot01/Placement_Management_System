@@ -8,6 +8,9 @@ import LoginForm from "./routes/LoginForm";
 import StudentDashboard from "./components/Student/StudentDashboard";
 import AdminDash from "./components/Admin/AdminDash";
 import AddStudent from "./components/Admin/AddStudent";
+import AdminProfile from "./components/Admin/Profile";
+import PlacementDash from "./components/Placement_coor/PlacementDash";
+import EmployerPage from "./components/Placement_coor/Employer";
 
 
 export default function App() {
@@ -33,8 +36,12 @@ export default function App() {
           />
           <Route path="/Login" element={<LoginForm />} />
           <Route
-            path="/dashboard"
+            path="/StudentDashboard"
             element={<StudentDashboard {...formData} />}
+          />
+           <Route
+            path="/PlacementDash"
+            element={<PlacementDash {...formData} />}
           />
           <Route
             path="/AdminDash"
@@ -43,6 +50,14 @@ export default function App() {
           <Route
             path="/AddStudent"
             element={<AddStudent {...formData} />}
+            />
+            <Route
+            path="/AdminProfile"
+            element={<AdminProfile {...formData} />}
+            />
+            <Route
+            path="/EmployerPage"
+            element={<EmployerPage {...formData} />}
             />
 
         </Routes>

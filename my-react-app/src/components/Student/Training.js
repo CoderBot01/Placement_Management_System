@@ -1,4 +1,5 @@
 import React from 'react';
+import "./View.css"
 
 class TrainingDevelopmentPage extends React.Component {
     constructor(props) {

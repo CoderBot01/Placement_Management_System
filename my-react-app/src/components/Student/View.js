@@ -1,121 +1,107 @@
-import React from 'react';
-import "./View.css"
+// StudentProfile.js
+import React, { useState } from 'react';
+import './View.css';
 
-class ViewProfilePage extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isEditMode: false,
-            student: {
-                name: "John Doe",
-                photo: "https://via.placeholder.com/150",
-                department: "Computer Science",
-                yearOfGraduation: 2023,
-                skills: ["JavaScript", "React", "Node.js", "HTML", "CSS"],
-                achievements: ["First place in Hackathon 2022", "Published an app on App Store"],
-                tenthSchool: "XYZ High School",
-                tenthYearOfPassing: 2015,
-                tenthPercentage: 85,
-                twelfthSchool: "ABC Higher Secondary School",
-                twelfthYearOfPassing: 2017,
-                twelfthPercentage: 90,
-                degree: "Bachelor of Technology",
-                degreeSchool: "XYZ University",
-                degreeYearOfPassing: 2021,
-                degreePercentage: 80
-            }
-        };
-    }
+const StudentProfile = () => {
+    const [activeSection, setActiveSection] = useState(null);
 
-    handleEditClick = () => {
-        this.setState({ isEditMode: true });
-    }
+    const toggleSection = (index) => {
+        setActiveSection(index === activeSection ? null : index);
+    };
 
-    handleSaveClick = () => {
-        // Perform save operation (e.g., send updated data to server)
-        this.setState({ isEditMode: false });
-    }
-
-    handleChange = (e) => {
-        const { name, value } = e.target;
-        this.setState(prevState => ({
-            student: {
-                ...prevState.student,
-                [name]: value
-            }
-        }));
-    }
-
-    render() {
-        const { isEditMode, student } = this.state;
-        const { name, photo, department, yearOfGraduation, skills, achievements, tenthSchool, tenthYearOfPassing, tenthPercentage, twelfthSchool, twelfthYearOfPassing, twelfthPercentage, degree, degreeSchool, degreeYearOfPassing, degreePercentage } = student;
-
-        return (
-            <div>
-                <div>
-                    <h1>{name}'s Profile</h1>
-                    <img src={photo} alt="Student Photo" style={{ borderRadius: '50%', width: '150px', height: '150px', objectFit: 'cover' }} />
+    return (
+        <div className="student-profile">
+            <section className={`section personal-info ${activeSection === 0 ? 'active' : ''}`} onClick={() => toggleSection(0)}>
+                <h2>Personal Information</h2>
+                <div className="section-content">
+                    <p>Full Name: John Doe</p>
+                    <p>Date of Birth: January 1, 2000</p>
+                    <p>Contact Information: john.doe@email.com | 123-456-7890 | 123 Main St, City, State</p>
+                    <p>Brief Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
                 </div>
-                <div>
-                    <h2>Details</h2>
-                    <p><strong>Name:</strong> {name}</p>
-                    <p><strong>Department:</strong> {department}</p>
-                    <p><strong>Year of Graduation:</strong> {yearOfGraduation}</p>
-                    {isEditMode && (
-                        <>
-                            <p><strong>10th School:</strong> <input type="text" name="tenthSchool" value={tenthSchool} onChange={this.handleChange} /></p>
-                            <p><strong>10th Year of Passing:</strong> <input type="text" name="tenthYearOfPassing" value={tenthYearOfPassing} onChange={this.handleChange} /></p>
-                            <p><strong>10th Percentage:</strong> <input type="text" name="tenthPercentage" value={tenthPercentage} onChange={this.handleChange} /></p>
-                            <p><strong>12th School:</strong> <input type="text" name="twelfthSchool" value={twelfthSchool} onChange={this.handleChange} /></p>
-                            <p><strong>12th Year of Passing:</strong> <input type="text" name="twelfthYearOfPassing" value={twelfthYearOfPassing} onChange={this.handleChange} /></p>
-                            <p><strong>12th Percentage:</strong> <input type="text" name="twelfthPercentage" value={twelfthPercentage} onChange={this.handleChange} /></p>
-                            <p><strong>Degree:</strong> <input type="text" name="degree" value={degree} onChange={this.handleChange} /></p>
-                            <p><strong>Degree School:</strong> <input type="text" name="degreeSchool" value={degreeSchool} onChange={this.handleChange} /></p>
-                            <p><strong>Degree Year of Passing:</strong> <input type="text" name="degreeYearOfPassing" value={degreeYearOfPassing} onChange={this.handleChange} /></p>
-                            <p><strong>Degree Percentage:</strong> <input type="text" name="degreePercentage" value={degreePercentage} onChange={this.handleChange} /></p>
-                        </>
-                    )}
-                </div>
-                <div>
-                    <h2>Skills</h2>
-                    {isEditMode ? (
-                        <ul>
-                            {skills.map((skill, index) => (
-                                <li key={index}><input type="text" value={skill} onChange={this.handleChange} name={`skills[${index}]`} /></li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <ul>
-                            {skills.map((skill, index) => (
-                                <li key={index}>{skill}</li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-                <div>
-                    <h2>Achievements</h2>
-                    {isEditMode ? (
-                        <ul>
-                            {achievements.map((achievement, index) => (
-                                <li key={index}><input type="text" value={achievement} onChange={this.handleChange} name={`achievements[${index}]`} /></li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <ul>
-                            {achievements.map((achievement, index) => (
-                                <li key={index}>{achievement}</li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-                {isEditMode ? (
-                    <button onClick={this.handleSaveClick}>Save</button>
-                ) : (
-                    <button onClick={this.handleEditClick}>Edit Profile</button>
-                )}
-            </div>
-        );
-    }
-}
+            </section>
 
-export default ViewProfilePage;
+            <section className={`section academic-achievements ${activeSection === 1 ? 'active' : ''}`} onClick={() => toggleSection(1)}>
+                <h2>Academic Achievements</h2>
+                <div className="section-content">
+                    <p>GPA: 3.8</p>
+                    <p>Awards/Honors: Dean's List, Academic Excellence Award</p>
+                    <p>Scholarships: Merit Scholarship</p>
+                    <p>Extracurricular Activities: Math Club President, Science Fair Participant</p>
+                </div>
+            </section>
+            <section className={`section skills ${activeSection === 2 ? 'active' : ''}`} onClick={() => toggleSection(2)}>
+                <h2>Skills</h2>
+                <div className={`section-content ${activeSection === 2 ? 'active' : ''}`}>
+                    <p>Technical Skills: JavaScript, React.js, HTML/CSS</p>
+                    <p>Soft Skills: Communication, Leadership, Teamwork</p>
+                    <p>Language Proficiency: English (Fluent), Spanish (Intermediate)</p>
+                </div>
+            </section>
+            <section className={`section certifications ${activeSection === 3 ? 'active' : ''}`} onClick={() => toggleSection(3)}>
+                <h2>Certifications</h2>
+                <div className={`section-content ${activeSection === 3 ? 'active' : ''}`}>
+                    <p>React.js Certification</p>
+                    <p>Date of Completion: January 2023</p>
+                    <p>Issuing Organization: XYZ Certification Center</p>
+                </div>
+            </section>
+
+
+            <section className={`section academic-records ${activeSection === 4 ? 'active' : ''}`} onClick={() => toggleSection(4)}>
+                <h2>Academic Records</h2>
+                <div className={`section-content ${activeSection === 4 ? 'active' : ''}`}>
+                    <p>List of Courses Completed:</p>
+                    <ul>
+                        <li>Course 1: A</li>
+                        <li>Course 2: B+</li>
+                        <li>Course 3: A-</li>
+                    </ul>
+                    <p>Transcripts: Uploaded</p>
+                    <p>Research Projects/Theses: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                </div>
+            </section>
+
+
+            <section className={`section portfolio ${activeSection === 5 ? 'active' : ''}`} onClick={() => toggleSection(5)}>
+                <h2>Portfolio</h2>
+                <div className={`section-content ${activeSection === 5 ? 'active' : ''}`}>
+                    <p>Showcase any projects, papers, or presentations you're proud of</p>
+                    <p>Provide links to online portfolios or repositories if available</p>
+                </div>
+            </section>
+
+            <section className={`section extracurricular-activities ${activeSection === 6 ? 'active' : ''}`} onClick={() => toggleSection(6)}>
+                <h2>Extracurricular Activities</h2>
+                <div className={`section-content ${activeSection === 6 ? 'active' : ''}`}>
+                    <p>Sports Involvement: Soccer Team Captain</p>
+                    <p>Clubs/Organizations: Debate Club Member</p>
+                    <p>Volunteer Work: Local Community Clean-up</p>
+                    <p>Leadership Roles: Class Representative</p>
+                </div>
+            </section>
+
+            <section className={`section work-experience ${activeSection === 7 ? 'active' : ''}`} onClick={() => toggleSection(7)}>
+                <h2>Work Experience</h2>
+                <div className={`section-content ${activeSection === 7 ? 'active' : ''}`}>
+                    <p>Internships: ABC Company (Summer 2022)</p>
+                    <p>Part-time Jobs: Retail Associate at XYZ Store</p>
+                    <p>Relevant Work Experience: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                </div>
+            </section>
+
+            <section className={`section references ${activeSection === 8 ? 'active' : ''}`} onClick={() => toggleSection(8)}>
+                <h2>References</h2>
+                <div className={`section-content ${activeSection === 8 ? 'active' : ''}`}>
+                    <p>Contact information for academic or professional references</p>
+                </div>
+            </section>
+
+
+
+
+        </div>
+    );
+};
+
+export default StudentProfile;

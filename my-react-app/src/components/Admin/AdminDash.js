@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import "./Dash.css"
 import AddStudent from './AddStudent';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import AdminProfile from './Profile';
 
 
 
@@ -23,12 +24,7 @@ function AdminDash() {
         <ul className="navbar-nav">
           <li className="nav-item">
             <Link to="/AddStudent" className="nav-link">
-              Add Student
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link to="/manage-students" className="nav-link">
-              Manage Students
+              Manage Student
             </Link>
           </li>
           <li className="nav-item">
@@ -42,15 +38,13 @@ function AdminDash() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/admin-profile" className="nav-link">
+            <Link to="/AdminProfile" className="nav-link">
               Admin Profile
             </Link>
           </li>
         </ul>
       </nav>
-      <Routes>
-      <Route path="/AddStudent" component={AddStudent} />
-      </Routes>
+      
     </div>
   );
 }
