@@ -1,39 +1,33 @@
 import React, { useState } from 'react';
+import AdminDash from "./AdminDash"
+// import "./Profile.css"
 
-function AdminProfile() {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // You can perform additional actions like validation, sending data to backend, etc.
-        console.log("Admin Profile Submitted:", { username, email, password });
-    };
-
+class AdminProfile extends React.Component {
+  render() {
     return (
-        <div>
-            <h2>Admin Profile</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                </label>
-                <br />
-                <label>
-                    Email:
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                </label>
-                <br />
-                <label>
-                    Password:
-                    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                </label>
-                <br />
-                <button type="submit">Save</button>
-            </form>
-        </div>
+      <div>
+        <header>
+          <h1>Admin Panel</h1>
+        </header>
+        <nav>
+          <a href="#">Dashboard</a>
+          <a href="#">Users</a>
+          <a href="#">Posts</a>
+          <a href="#">Settings</a>
+          {/* Add more links for other functionalities */}
+        </nav>
+        <section>
+          <h2>Welcome to the Admin Panel</h2>
+          <div className="button-container">
+            <button className="button">Add User</button>
+            <button className="button">Edit User</button>
+            <button className="button button-danger">Delete User</button>
+            {/* Add more buttons for other admin actions */}
+          </div>
+        </section>
+      </div>
     );
+  }
 }
 
 export default AdminProfile;

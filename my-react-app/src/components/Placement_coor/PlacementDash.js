@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../Admin/Dash.css';
 import EmployerPage from './Employer';
+import StudentManagement from "./ManageStudent"
 
 function PlacementDash() {
   const [navbarOpen, setNavbarOpen] = useState(false);
@@ -19,7 +20,7 @@ function PlacementDash() {
       <nav className={navbarOpen ? "navbar active" : "navbar"}>
         <ul className="navbar-nav">
           <li className="nav-item"> 
-            <Link to="/students" className="nav-link">Manage Students</Link>
+            <Link to="/StudentManagement" className="nav-link">Manage Students</Link>
           </li>
           <li className="nav-item"> 
             <Link to="/EmployerPage" className="nav-link">Manage Employers</Link>

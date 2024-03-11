@@ -1,0 +1,61 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header h1 {
+    font-size: 2em; /* Set a larger font size for the heading */
+    text-align: center; /* Center the text horizontally */
+    position: relative; /* Makes the element positionable */
+    top: 50%; /* Moves the element 50% down from its position */
+    transform: translateY(-50%); /* Moves the element up 50% of its own height */
+  }
+  
+  .header .contact-info {
+    float: right; /* Floats the contact info to the right */
+  }
+  
+  .content {
+    padding: 20px;
+  }
+  
+  .content section {
+    padding: 20px; /* Adds 20px padding to all sections */
+    margin-bottom: 20px; /* Adds space between sections */
+    border-bottom: 1px solid #ddd; /* Adds a light border to sections */
+  }
+  
+  .section-title {
+    font-size: 1.5em; /* Set a larger size for section titles */
+    margin-bottom: 10px; /* Adds space below section titles */
+    color: #007bff;
+  }
+  
+  .education h3, .experience h3 {
+    font-weight: bold; /* Makes section titles bolder */
+  }
+  
+  .experience ul {
+    list-style: disc; /* Sets default bullet points for the list */
+    padding-left: 20px; /* Indents the list items */
+  }
+  
+  .skills, .certifications {
+    list-style: none; /* Removes default list styling */
+    padding: 0; /* Removes default padding for the list */
+  }
+  
+  .skills li, .certifications li {
+    margin-bottom: 5px; /* Adds space between list items */
+  }
+  

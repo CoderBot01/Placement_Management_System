@@ -11,6 +11,7 @@ import AddStudent from "./components/Admin/AddStudent";
 import AdminProfile from "./components/Admin/Profile";
 import PlacementDash from "./components/Placement_coor/PlacementDash";
 import EmployerPage from "./components/Placement_coor/Employer";
+import StudentManagement from "./components/Placement_coor/ManageStudent"
 
 
 export default function App() {
@@ -58,6 +59,11 @@ export default function App() {
             <Route
             path="/EmployerPage"
             element={<EmployerPage {...formData} />}
+            />
+
+            <Route
+            path="/StudentManagement"
+            element={<StudentManagement {...formData} />}
             />
 
         </Routes>
