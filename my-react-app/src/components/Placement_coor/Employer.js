@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-function EmployerList() {
-  // Sample employer data (replace with your actual data)
-  const [employers, setEmployers] = useState([
-    { id: 1, name: 'Company A', industry: 'Technology' },
-    { id: 2, name: 'Company B', industry: 'Finance' },
-    { id: 3, name: 'Company C', industry: 'Healthcare' }
-  ]);
-
+function EmployerList({ employers, deleteEmployer }) {
   return (
     <div>
       <h2>Employer List</h2>
@@ -16,6 +10,7 @@ function EmployerList() {
         {employers.map(employer => (
           <li key={employer.id}>
             <Link to={`/employers/${employer.id}`}>{employer.name}</Link> - {employer.industry}
+            <button onClick={() => deleteEmployer(employer.id)}>Delete</button>
           </li>
         ))}
       </ul>
@@ -23,10 +18,11 @@ function EmployerList() {
   );
 }
 
-function EmployerDetails({ match }) {
+function EmployerDetails({ employers, match }) {
   const { id } = match.params;
-  // Fetch employer details based on ID (you can replace this with your data fetching logic)
-  const [employer, setEmployer] = useState({ id: id, name: 'Company A', industry: 'Technology', address: '123 Main St' });
+  const employer = employers.find(emp => emp.id === parseInt(id));
+
+  if (!employer) return <Navigate to="/employers" />;
 
   return (
     <div>
@@ -38,14 +34,13 @@ function EmployerDetails({ match }) {
   );
 }
 
-function EmployerEdit({ match }) {
+function EmployerEdit({ employers, match }) {
   const { id } = match.params;
-  // Fetch employer details for editing (you can replace this with your data fetching logic)
-  const [employer, setEmployer] = useState({ id: id, name: 'Company A', industry: 'Technology', address: '123 Main St' });
+  const [employer, setEmployer] = useState(employers.find(emp => emp.id === parseInt(id)));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission (update employer details)
+    // Update employer details logic
   };
 
   return (
@@ -71,15 +66,65 @@ function EmployerEdit({ match }) {
 }
 
 function EmployerPage() {
-    return (
-      <div>
-        <Link to="/employers/new">Add New Employer</Link>
-        <hr />
-        <Route exact path="/employers" component={EmployerList} /> {/* Use Route component */}
-        <Route path="/employers/:id" component={EmployerDetails} /> {/* Use Route component */}
-        <Route path="/employers/:id/edit" component={EmployerEdit} /> {/* Use Route component */}
-      </div>
-    );
-  }
+  const [employers, setEmployers] = useState([
+    { id: 1, name: 'Company A', industry: 'Technology', address: '123 Main St' },
+    { id: 2, name: 'Company B', industry: 'Finance', address: '456 Wall St' },
+    { id: 3, name: 'Company C', industry: 'Healthcare', address: '789 Broadway' }
+  ]);
+
+  const deleteEmployer = (id) => {
+    setEmployers(prevEmployers => prevEmployers.filter(emp => emp.id !== id));
+  };
+
+  const addEmployer = (newEmployer) => {
+    setEmployers(prevEmployers => [...prevEmployers, { id: prevEmployers.length + 1, ...newEmployer }]);
+  };
+
+  return (
+    <div>
+      <Link to="/employers/new">Add New Employer</Link>
+      <hr />
+      <Routes>
+        <Route exact path="/employers">
+          <EmployerList employers={employers} deleteEmployer={deleteEmployer} />
+        </Route>
+        <Route path="/employers/:id" element={<EmployerDetails employers={employers} />} />
+        <Route path="/employers/:id/edit" element={<EmployerEdit employers={employers} />} />
+        <Route path="/employers/new" element={<EmployerAdd addEmployer={addEmployer} />} />
+      </Routes>
+    </div>
+  );
+}
+
+function EmployerAdd({ addEmployer }) {
+  const [newEmployer, setNewEmployer] = useState({ name: '', industry: '', address: '' });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addEmployer(newEmployer);
+    setNewEmployer({ name: '', industry: '', address: '' });
+  };
+
+  return (
+    <div>
+      <h2>Add New Employer</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Name:</label>
+          <input type="text" value={newEmployer.name} onChange={(e) => setNewEmployer({ ...newEmployer, name: e.target.value })} />
+        </div>
+        <div>
+          <label>Industry:</label>
+          <input type="text" value={newEmployer.industry} onChange={(e) => setNewEmployer({ ...newEmployer, industry: e.target.value })} />
+        </div>
+        <div>
+          <label>Address:</label>
+          <input type="text" value={newEmployer.address} onChange={(e) => setNewEmployer({ ...newEmployer, address: e.target.value })} />
+        </div>
+        <button type="submit">Add Employer</button>
+      </form>
+    </div>
+  );
+}
 
 export default EmployerPage;

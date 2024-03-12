@@ -2,8 +2,8 @@
 
 .placed {
   position: relative;
-  bottom: 1000px;
-  left: 1100px;
+  bottom: 950px;
+  left: 1200px;
   width: 400px;
   height: 300px;
   background-color: rgba(174, 25, 25, 0.8);
@@ -13,7 +13,7 @@
   overflow: hidden;
   background: linear-gradient(
     135deg,
-    rgba(197, 35, 35, 0.9),
+    rgba(35, 159, 197, 0.9),
     rgba(19, 221, 150, 0.6)
   );
   clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);

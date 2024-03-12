@@ -10,7 +10,7 @@ function Home() {
       <Navbar />
       <Hero
         cName="hero"
-        heroImg="./assets/background.jpg"
+        heroImg="./assets/HomePet2.jpg"
         title="Your future Journey Starts Here "
         text="Our goal is to help you realize your full potential. "
         buttonText="Get Started"

@@ -15,7 +15,7 @@ function AdminDash() {
   };
 
   return (
-    <div className="admin-dashboard">
+    <div className="student-dashboard">
       <h1 className="admin-name">HI,Admin</h1>
       <button className="navbar-toggle" onClick={toggleNavbar}>
         MENU

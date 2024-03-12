@@ -27,8 +27,31 @@ app.get('/students', async (req, res) => {
     }
 });
 
+app.get('/jobs', async (req,res) =>{
+    try {
+        const result = await database.client.query('SELECT * FROM jobs');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 app.get('/', async (req, res) => {
     res.status(200).json({ response: 'Welcome' });
+});
+
+app.post('/jobs', async (req, res) => {
+    console.log(req.body)
+    const { studentId, name, department, year, cgpa } = req.body;
+    try {
+        await database.client.query('INSERT INTO jobs(id, job_title, job_description, company_info, salary) VALUES($1, $2, $3, $4, $5)', [studentId, name, department, year, cgpa]);
+        res.status(201).json({ message: 'Student added successfully' });
+    } catch (err) {
+        console.error('Error inserting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 app.post('/students', async (req, res) => {
@@ -43,8 +66,8 @@ app.post('/students', async (req, res) => {
     }
 });
 
-app.delete('/students/:id', async (req, res) => {
-    const id = req.params.id;
+app.delete('/students/:Id', async (req, res) => {
+    const id = req.params.Id;
     try {
         await database.client.query('DELETE FROM students WHERE studentId = $1', [id]);
         res.json({ message: 'Student deleted successfully' });
@@ -53,6 +76,9 @@ app.delete('/students/:id', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+
+
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

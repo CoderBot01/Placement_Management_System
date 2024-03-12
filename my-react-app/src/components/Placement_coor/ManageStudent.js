@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import * as XLSX from 'xlsx'; 
+import * as XLSX from 'xlsx';
 import "./mgstu.css"
 
 function StudentManagement() {
@@ -18,7 +18,7 @@ function StudentManagement() {
 
     const addStudent = async () => {
         const newStudent = { studentId, name, department, year, cgpa };
-    
+
         // Check if the studentId already exists
         const isExistingStudent = students.some(student => student.studentId === studentId);
         if (isExistingStudent) {
@@ -27,7 +27,7 @@ function StudentManagement() {
         } else {
             setAlertMessage(''); // Clear any existing alert
         }
-    
+
         try {
             // Make a POST request to add the new student
             const addResponse = await fetch('http://localhost:3000/students', {
@@ -37,39 +37,51 @@ function StudentManagement() {
                 },
                 body: JSON.stringify(newStudent),
             });
-    
+
             if (!addResponse.ok) {
                 throw new Error('Failed to add student');
             }
-    
+
             // Assuming the response body contains the added student data
             const addedStudent = await addResponse.json();
-    
+
             // Make a GET request to fetch the updated list of students
             const getResponse = await fetch('http://localhost:3000/students');
             if (!getResponse.ok) {
                 throw new Error('Failed to fetch students');
             }
-    
+
             const updatedStudents = await getResponse.json();
-    
+
             // Update state with the updated list of students
             setStudents(updatedStudents);
             setSearchedStudents([...searchedStudents, addedStudent]); // Automatically add to displayed list
             // Clear input fields
-    
+
         } catch (error) {
             console.error('Error adding student:', error);
             // Handle error
         }
     };
-    
 
-    const searchByDepartments = () => {
-        const filteredStudents = students.filter(student => selectedDepartments.includes(student.department));
-        setSearchedStudents(filteredStudents);
+
+    const searchByDepartments = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/students');
+            if (!response.ok) {
+                throw new Error('Failed to fetch students');
+            }
+            const data = await response.json();
+            
+            // Filter the data based on selected departments
+            const filteredStudents = data.filter(student => selectedDepartments.includes(student.department));
+            setSearchedStudents(filteredStudents);
+        } catch (error) {
+            console.error('Error fetching students:', error);
+            // Handle error
+        }
     };
-
+    
     const exportToPDF = () => {
         const doc = new jsPDF();
         doc.text("Search Results", 10, 10);
@@ -109,7 +121,19 @@ function StudentManagement() {
             <input type="text" placeholder="Student ID" value={studentId} onChange={(e) => setStudentId(e.target.value)} />
             {alertMessage && <div className="alert">{alertMessage}</div>}
             <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
-            <input type="text" placeholder="Department" value={department} onChange={(e) => setDepartment(e.target.value)} />
+            <select value={department} onChange={(e) => setDepartment(e.target.value)}>
+                <option value="">Select Department</option>
+                <option value="IT">IT</option>
+                <option value="CSE">CSE</option>
+                <option value="Mech">Mechanical</option>
+                <option value="civil">Civil</option>
+                <option value="MDE">MDE</option>
+                <option value="ECE">ECE</option>
+                <option value="EEE">EEE</option>
+
+
+
+            </select>
             <input type="text" placeholder="Year" value={year} onChange={(e) => setYear(e.target.value)} />
             <input type="text" placeholder="CGPA" value={cgpa} onChange={(e) => setCGPA(e.target.value)} />
             <button onClick={addStudent}>Add Student</button>
@@ -138,17 +162,17 @@ function StudentManagement() {
                             <tr>
                                 <th>studentId</th>
                                 <th>Name</th>
-                                <th>Department</th>                                
+                                <th>Department</th>
                                 <th>Year</th>
                                 <th>GPA</th>
-                               
+
                             </tr>
                         </thead>
                         <tbody>
                             {students.map((student, index) => (
                                 <tr key={index}>
 
-                                     <td>{student.studentId}</td>
+                                    <td>{student.studentId}</td>
                                     <td>{student.name}</td>
                                     <td>{student.department}</td>
                                     <td>{student.year}</td>

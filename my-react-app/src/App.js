@@ -12,6 +12,7 @@ import AdminProfile from "./components/Admin/Profile";
 import PlacementDash from "./components/Placement_coor/PlacementDash";
 import EmployerPage from "./components/Placement_coor/Employer";
 import StudentManagement from "./components/Placement_coor/ManageStudent"
+import JobPostingForm from "./components/Placement_coor/Postjob";
 
 
 export default function App() {
@@ -64,6 +65,10 @@ export default function App() {
             <Route
             path="/StudentManagement"
             element={<StudentManagement {...formData} />}
+            />
+            <Route
+            path="/JobPostingForm"
+            element={<JobPostingForm {...formData} />}
             />
 
         </Routes>

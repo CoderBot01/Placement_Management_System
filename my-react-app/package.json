@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@react-pdf/renderer": "^3.3.8",
     "axios": "^1.6.7",
     "chart.js": "^4.4.2",

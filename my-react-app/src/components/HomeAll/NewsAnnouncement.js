@@ -26,7 +26,7 @@ function AnnouncementComponent() {
 
   return (
     <div className="announcementContainer">
-      <h2>Announcements</h2>
+      <h1 className="hi">Announcements</h1>
       <div className="announcement-news">
         <p>
           <a href="announcement1.html">This is the first announcement.</a>

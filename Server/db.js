@@ -21,16 +21,23 @@ class Database {
         const createTablesQueries = [
             `
             CREATE TABLE IF NOT EXISTS students (
-                studentId SERIAL PRIMARY KEY,
+                studentId VARCHAR(12) PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
                 department VARCHAR(255),
                 year INTEGER,
                 cgpa NUMERIC(3, 2),
                 is_active BOOLEAN DEFAULT TRUE
+            );            
+            `,
+            `
+            CREATE TABLE jobs (
+                id SERIAL PRIMARY KEY,
+                job_title VARCHAR(255) NOT NULL,
+                job_description TEXT,
+                company_info TEXT,
+                salary DECIMAL(10, 2)
             );
-            
-      
-            
+                        
             `,
             // Define other table creation queries here
         ];

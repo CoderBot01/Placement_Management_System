@@ -13,7 +13,7 @@ function Service() {
         text="Our goal is to help you realize your full potential. "
         buttonText="Get Started"
         url="/"
-        btnClass="show"
+       
       />
 
       <Footer />

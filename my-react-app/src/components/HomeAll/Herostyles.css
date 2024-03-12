@@ -31,6 +31,12 @@ img {
   -webkit-background-clip: text;
   background-clip: text;
   background-color: aliceblue;
+  background: linear-gradient(to right, blue, rgb(197, 26, 26),white);
+  -webkit-background-clip: text; /* For WebKit (Safari, Chrome) */
+  background-clip: text;
+  color: transparent; /* Hide the text */
+  text-decoration-line: underline; /* Add underline */
+  align-items: center; 
 }
 .hero-text p {
   font-size: 2rem;

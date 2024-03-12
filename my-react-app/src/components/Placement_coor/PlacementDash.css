@@ -1,49 +1,43 @@
-.container {
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .title {
-    text-align: center;
-    color: #333;
-  }
-  
-  .admin-details {
-    margin-bottom: 20px;
-  }
-  
-  .admin-details h2 {
-    font-size: 20px;
-    margin-bottom: 10px;
-    color: #007bff;
-  }
-  
-  .admin-details p {
-    margin: 5px 0;
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: center;
-  }
-  
-  .button {
-    padding: 10px 20px;
-    margin: 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
+/* Style for the placement dashboard container */
+.placement-dashboard {
+  position: relative;
+}
+
+/* Style for the header */
+.placement-dashboard .placement-name {
+  text-align: center;
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+}
+
+/* Styling for the top-right buttons */
+.placement-dashboard .top-right-buttons {
+  position: absolute;
+  top: 20px; /* Adjust as needed */
+  right: 20px; /* Adjust as needed */
+}
+
+/* Styling for navigation buttons */
+.placement-dashboard .buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.placement-dashboard .button {
+  background-color: #333;
+  color: #fff;
+  border: none;
+  margin: 0 10px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none; /* Add this to remove the underline */
+}
+
+/* Hover state for navigation buttons */
+.placement-dashboard .button:hover {
+  background-color: #555;
+}

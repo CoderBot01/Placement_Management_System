@@ -5,7 +5,9 @@ import "./Navbarstyles.css";
 import AdminProfile from "../Admin/Profile";
 import PlacementDash from "../Placement_coor/PlacementDash";
 import StudentDashboard from "../Student/StudentDashboard";
-import AdminDash from "../Admin/AdminDash";
+import AdminDash from "../Admin/AdminDash"; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
   const [clicked, setClicked] = useState(false);
@@ -33,7 +35,9 @@ const Navbar = () => {
         ))}
         <li className="login-dropdown">
           <div className="dropdown">
-            <button className="login-btn">Login</button>
+            <button className="login-btn">
+              <FontAwesomeIcon icon={faUser} /> Login
+            </button>
             <div className="dropdown-content">
               <Link to="/AdminDash">Admin</Link>
               <Link to="/PlacementDash">Placement Coordinator</Link>
