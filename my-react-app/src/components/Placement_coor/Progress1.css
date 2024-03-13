@@ -1,0 +1,10 @@
+/* Style for the container of the first bar chart */
+.container:nth-child(1) {
+    border: 2px solid #ff0000; /* Red border */
+    margin-bottom: 20px; /* Add some space between charts */
+}
+
+/* Style for the container of the second bar chart */
+.container:nth-child(2) {
+    border: 2px solid #00ff00; /* Green border */
+}

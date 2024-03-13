@@ -6,9 +6,6 @@ import Service from "./routes/Service";
 import Contact from "./routes/Contact";
 import LoginForm from "./routes/LoginForm"; 
 import StudentDashboard from "./components/Student/StudentDashboard";
-import AdminDash from "./components/Admin/AdminDash";
-import AddStudent from "./components/Admin/AddStudent";
-import AdminProfile from "./components/Admin/Profile";
 import PlacementDash from "./components/Placement_coor/PlacementDash";
 import EmployerPage from "./components/Placement_coor/Employer";
 import StudentManagement from "./components/Placement_coor/ManageStudent"
@@ -31,7 +28,9 @@ export default function App() {
 
       <div>
         <Routes>
+          <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
+
           <Route path="/about" element={<About />} />
           <Route path="/service" element={<Service />} />
           <Route path="/contact" element={<Contact />} />
@@ -49,18 +48,6 @@ export default function App() {
             path="/PlacementDash"
             element={<PlacementDash {...formData} />}
           />
-          <Route
-            path="/AdminDash"
-            element={<AdminDash {...formData} />}
-          />
-          <Route
-            path="/AddStudent"
-            element={<AddStudent {...formData} />}
-            />
-            <Route
-            path="/AdminProfile"
-            element={<AdminProfile {...formData} />}
-            />
             <Route
             path="/EmployerPage"
             element={<EmployerPage {...formData} />}

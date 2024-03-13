@@ -1,6 +1,8 @@
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import "./Progress.css"
+import Chart from 'chart.js/auto'
+
 
 class ProgressPage extends React.Component {
     constructor(props) {
@@ -28,6 +30,24 @@ class ProgressPage extends React.Component {
                 <Bar
                     data={this.state.progressData}
                     options={{
+                        scales: {
+                            xAxes: [{
+                                type: 'category', // Define x-axis scale type as category
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Tasks'
+                                }
+                            }],
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Progress (%)'
+                                }
+                            }]
+                        },
                         title: {
                             display: true,
                             text: 'Task Progress',
