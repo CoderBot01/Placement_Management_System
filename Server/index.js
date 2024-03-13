@@ -44,10 +44,10 @@ app.get('/', async (req, res) => {
 
 app.post('/jobs', async (req, res) => {
     console.log(req.body)
-    const { studentId, name, department, year, cgpa } = req.body;
+    const { companyInfo, jobDescription, jobTitle, salary } = req.body;
     try {
-        await database.client.query('INSERT INTO jobs(id, job_title, job_description, company_info, salary) VALUES($1, $2, $3, $4, $5)', [studentId, name, department, year, cgpa]);
-        res.status(201).json({ message: 'Student added successfully' });
+        await database.client.query('INSERT INTO jobs( job_title, job_description, company_info, salary) VALUES($1, $2, $3, $4)', [ companyInfo, jobDescription, jobTitle, salary]);
+        res.status(201).json({ message: 'jobadded successfully' });
     } catch (err) {
         console.error('Error inserting data', err);
         res.status(500).json({ error: 'Internal server error' });

@@ -30,7 +30,7 @@ class Database {
             );            
             `,
             `
-            CREATE TABLE jobs (
+            CREATE TABLE IF NOT EXISTS jobs (
                 id SERIAL PRIMARY KEY,
                 job_title VARCHAR(255) NOT NULL,
                 job_description TEXT,
