@@ -13,6 +13,10 @@ import PlacementDash from "./components/Placement_coor/PlacementDash";
 import EmployerPage from "./components/Placement_coor/Employer";
 import StudentManagement from "./components/Placement_coor/ManageStudent"
 import JobPostingForm from "./components/Placement_coor/Postjob";
+import TrainingPage from "./components/Placement_coor/Training";
+import ProgressTracker from "./components/Placement_coor/Progress";
+import InterviewScheduler from "./components/Placement_coor/Schedule";
+
 
 
 export default function App() {
@@ -69,6 +73,18 @@ export default function App() {
             <Route
             path="/JobPostingForm"
             element={<JobPostingForm {...formData} />}
+            />
+             <Route
+            path="/TrainingPage"
+            element={<TrainingPage {...formData} />}
+            />
+            <Route
+            path="/ProgressTracker"
+            element={<ProgressTracker {...formData} />}
+            />
+             <Route
+            path="/InterviewScheduler"
+            element={<InterviewScheduler {...formData} />}
             />
 
         </Routes>

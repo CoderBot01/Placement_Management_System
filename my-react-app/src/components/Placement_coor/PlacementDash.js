@@ -3,7 +3,9 @@ import './PlacementDash.css';
 import EmployerPage from './Employer';
 import StudentManagement from "./ManageStudent";
 import JobPostingForm from "./Postjob";
-
+import TrainingPage from './Training';
+import ProgressTracker from './Progress';
+import InterviewScheduler from "./Schedule";
 function PlacementDash() {
     const [activeTab, setActiveTab] = useState('edit');
 
@@ -37,6 +39,9 @@ function PlacementDash() {
               {activeTab === 'manage_student' && <StudentManagement/>}
               {activeTab === 'manage_employer' && <EmployerPage />}
               {activeTab === 'manage_jobs' && <JobPostingForm />}
+              {activeTab === 'training' && <TrainingPage/>}
+              {activeTab === 'progress'&& <ProgressTracker/>}
+              {activeTab === 'schedule_interview'&& <InterviewScheduler/>}
               {/* Add other conditions for different tabs */}
           </section>
       </div>
@@ -44,3 +49,6 @@ function PlacementDash() {
     }  
 
 export default PlacementDash;
+
+
+

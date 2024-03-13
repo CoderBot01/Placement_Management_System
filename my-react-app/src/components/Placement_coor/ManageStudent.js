@@ -128,7 +128,7 @@ function StudentManagement() {
                 <option value="IT">IT</option>
                 <option value="CSE">CSE</option>
                 <option value="Mech">Mechanical</option>
-                <option value="Civil">Civil</option>
+                <option value="civil">Civil</option>
                 <option value="MDE">MDE</option>
                 <option value="ECE">ECE</option>
                 <option value="EEE">EEE</option>

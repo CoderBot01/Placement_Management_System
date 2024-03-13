@@ -36,6 +36,24 @@ class Database {
                 job_description TEXT,
                 company_info TEXT,
                 salary DECIMAL(10, 2)
+            );            
+            `,
+            `
+            CREATE TABLE IF NOT EXISTS training (
+                ID SERIAL PRIMARY KEY,
+                Title VARCHAR(255),
+                Description TEXT,
+                Duration TIME
+            );            
+            `,
+            `
+            CREATE TABLE IF NOT EXISTS scheule (
+                ID SERIAL PRIMARY KEY,
+                StudentName VARCHAR(255),
+                CompanyName VARCHAR(255),
+                InterviewTitle VARCHAR(255),
+                UpdateLink TEXT,
+                InterviewSession TIMESTAMP
             );
                         
             `,
