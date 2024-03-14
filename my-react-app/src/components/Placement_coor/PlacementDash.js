@@ -6,6 +6,7 @@ import JobPostingForm from "./Postjob";
 import TrainingPage from './Training';
 import ProgressTracker from './Progress';
 import InterviewScheduler from "./Schedule";
+import PlacementPage from './settings';
 function PlacementDash() {
     const [activeTab, setActiveTab] = useState('edit');
 
@@ -23,7 +24,7 @@ function PlacementDash() {
           <header className="placement-name">
               <h1>Placement Coordinator</h1>
               <div className="top-right-buttons">
-                  <button onClick={() => handleTabChange('settings')} className="link">Settings</button>
+                  <button onClick={() => handleTabChange('PlacementPage')} className="link">Settings</button>
                   <button onClick={handleLogout} className="link">Logout</button>
               </div>
           </header>
@@ -41,7 +42,10 @@ function PlacementDash() {
               {activeTab === 'manage_jobs' && <JobPostingForm />}
               {activeTab === 'training' && <TrainingPage/>}
               {activeTab === 'progress'&& <ProgressTracker/>}
-              {activeTab === 'schedule_interview'&& <InterviewScheduler/>}
+              {activeTab === 'schedule_interview'&& <InterviewScheduler/>}           
+               {activeTab === 'PlacementPage'&& <PlacementPage/>}
+
+              
               {/* Add other conditions for different tabs */}
           </section>
       </div>

@@ -78,6 +78,16 @@ app.delete('/students/:Id', async (req, res) => {
 });
 
 
+app.delete('/jobs/:id', async (req, res) => {
+    const id = req.params.id;
+    try {
+        await database.client.query('DELETE FROM jobs WHERE id = $1', [id]);
+        res.json({ message: 'Job deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 
 app.listen(port, () => {

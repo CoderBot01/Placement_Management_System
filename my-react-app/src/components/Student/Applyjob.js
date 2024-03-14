@@ -1,34 +1,37 @@
-import React, { useState } from 'react';
-
-
+import React, { useState, useEffect } from 'react';
 
 class ApplyForJobPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            jobs: [
-                { 
-                    company: "ABC Inc.",
-                    position: "Software Developer",
-                    salary: "$70,000 - $90,000",
-                    eligibility: "Bachelor's degree in Computer Science or related field",
-                    description: "We are seeking a skilled software developer to join our team..."
-                },
-                { 
-                    company: "XYZ Corporation",
-                    position: "Marketing Intern",
-                    salary: "Unpaid",
-                    eligibility: "Currently enrolled in a college or university program",
-                    description: "We are looking for a marketing intern to assist our marketing team..."
-                }
-                // Add more job listings as needed
-            ]
+            jobs: []
         };
     }
 
-    applyForJob = (jobTitle) => {
-        // You can customize this function to perform actions when applying for a job, such as displaying a form, etc.
-        alert("You have applied for the position of " + jobTitle);
+    componentDidMount() {
+        this.fetchJobs();
+    }
+
+    fetchJobs = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/jobs');
+            if (!response.ok) {
+                throw new Error('Failed to fetch jobs');
+            }
+            const data = await response.json();
+            this.setState({ jobs: data });
+        } catch (error) {
+            console.error('Error fetching jobs:', error);
+        }
+    };
+
+    applyForJob = (jobId) => {
+        const job = this.state.jobs.find(job => job.id === jobId);
+        if (job) {
+            alert("You have applied for the position of " + job.job_title);
+        } else {
+            console.error("Job not found");
+        }
     }
 
     render() {
@@ -36,15 +39,15 @@ class ApplyForJobPage extends React.Component {
             <div className="container">
                 <h1>Available Jobs</h1>
                 <ul className="job-list">
-                    {this.state.jobs.map((job, index) => (
-                        <li className="job-item" key={index}>
-                            <div className="job-title">{job.position} at {job.company}</div>
+                    {this.state.jobs.map((job) => (
+                        <li className="job-item" key={job.id}>
+                            <div className="job-title">{job.job_title} at {job.company}</div>
                             <div className="job-info">
                                 <div><strong>Salary:</strong> {job.salary}</div>
                                 <div><strong>Eligibility:</strong> {job.eligibility}</div>
                             </div>
                             <div className="job-description">{job.description}</div>
-                            <button onClick={() => this.applyForJob(job.position)}>Apply</button>
+                            <button onClick={() => this.applyForJob(job.id)}>Apply</button>
                         </li>
                     ))}
                 </ul>
