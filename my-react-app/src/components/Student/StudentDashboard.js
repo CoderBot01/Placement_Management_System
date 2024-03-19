@@ -7,7 +7,7 @@ import ViewProfilePage from './View';
 import ProgressPage from './Progress';
 import Resume from './Resume';
 import JobRecommendation from './Recommend';
-import InterviewAt from "./Interview"
+import InterviewAt from "./Interview";
 function StudentDashboard() {
     const [activeTab, setActiveTab] = useState('edit');
 

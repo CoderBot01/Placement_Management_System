@@ -6,6 +6,7 @@ import PlacementDash from "../Placement_coor/PlacementDash";
 import StudentDashboard from "../Student/StudentDashboard";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import LoginPage from "../Login";
 
 const Navbar = () => {
   const [clicked, setClicked] = useState(false);
@@ -39,6 +40,7 @@ const Navbar = () => {
             <div className="dropdown-content">
               <Link to="/PlacementDash">Placement Coordinator</Link>
               <Link to="/StudentDashboard">Student</Link>
+              <Link to="/LoginPage">Login</Link>
             </div>
           </div>
         </li>
