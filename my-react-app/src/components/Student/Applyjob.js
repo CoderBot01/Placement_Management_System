@@ -41,7 +41,7 @@ class ApplyForJobPage extends React.Component {
                 <ul className="job-list">
                     {this.state.jobs.map((job) => (
                         <li className="job-item" key={job.id}>
-                            <div className="job-title">{job.job_title} at {job.company}</div>
+                            <div className="job-title">{job.job_title} at {job.company_info}</div>
                             <div className="job-info">
                                 <div><strong>Salary:</strong> {job.salary}</div>
                                 <div><strong>Eligibility:</strong> {job.eligibility}</div>

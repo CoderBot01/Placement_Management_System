@@ -1,37 +1,74 @@
-import React from 'react';
-import "./View.css"
+import React, { Component } from 'react';
+import './Train.css';
 
-class TrainingDevelopmentPage extends React.Component {
+class TrainingDevelopmentPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            programs: [
-                { name: "Software Development Bootcamp", duration: "8 weeks" },
-                { name: "Digital Marketing Certification", duration: "6 weeks" },
-                { name: "Project Management Workshop", duration: "2 days" },
-                // Add more programs as needed
-            ]
+            trainings: []
         };
     }
 
-    handleRegister = (programName) => {
-        // You can customize this function to perform registration actions
-        alert(`You have registered for ${programName}`);
+    componentDidMount() {
+        this.fetchTrainings();
     }
+
+    fetchTrainings = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/trainings');
+            if (!response.ok) {
+                throw new Error('Failed to fetch Trainings');
+            }
+            const data = await response.json();
+            this.setState({ trainings: data });
+        } catch (error) {
+            console.error('Error fetching trainings:', error);
+        }
+    };
+
+    applyForTraining = (id) => {
+        const training = this.state.trainings.find(training => training.id === id);
+        if (training) {
+            alert("You have applied for the training for " + training.title);
+        } else {
+            console.error("Training not found");
+        }
+    };
 
     render() {
         return (
             <div className="container">
-                <h1>Placement Training and Development Programs</h1>
-                <ul className="program-list">
-                    {this.state.programs.map((program, index) => (
-                        <li className="program-item" key={index}>
-                            <div className="program-name">{program.name}</div>
-                            <div className="program-duration">Duration: {program.duration}</div>
-                            <button onClick={() => this.handleRegister(program.name)}>Register</button>
-                        </li>
+                <h1>Available Trainings</h1>
+                <div className="tables-container">
+                    {this.state.trainings.map((training, index) => (
+                        <table key={index} className="training-table">
+                            <thead>
+                                <tr>
+                                    <th colSpan="2">{training.title}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Duration:</strong></td>
+                                    <td>{training.duration} Weeks</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Description:</strong></td>
+                                    <td>{training.description}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Fees:</strong></td>
+                                    <td>{training.fees}</td>
+                                </tr>
+                                <tr>
+                                    <td colSpan="2">
+                                        <button onClick={() => this.applyForTraining(training.id)}>Register</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     ))}
-                </ul>
+                </div>
             </div>
         );
     }

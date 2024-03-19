@@ -75,7 +75,7 @@ function JobPostingForm() {
     return (
         <div>
             <h1>Job Management System</h1>
-            <h2>Post a Job</h2>
+            <h2 align="center">Post a Job</h2>
             <form onSubmit={addJob}>
                 <label htmlFor="jobTitle">Job Title:</label><br />
                 <input type="text" id="jobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required /><br />
@@ -91,15 +91,28 @@ function JobPostingForm() {
             <h2>Posted Jobs</h2>
             <button onClick={handleRefreshJobs}>Refresh Jobs</button>
             {jobs.length > 0 ? (
-                jobs.map(job => (
-                    <div key={job.id} className="job">
-                        <h3>{job.job_title}</h3>
-                        <p><strong>Job Description:</strong> {job.job_description}</p>
-                        <p><strong>Company Information:</strong> {job.company_info}</p>
-                        <p><strong>Salary:</strong> {job.salary}</p>
-                        <button onClick={() => handleDeleteJob(job.id)}>Delete</button>
-                    </div>
-                ))
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Job Description</th>
+                            <th>Company Information</th>
+                            <th>Salary</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {jobs.map(job => (
+                            <tr key={job.id}>
+                                <td>{job.job_title}</td>
+                                <td>{job.job_description}</td>
+                                <td>{job.company_info}</td>
+                                <td>{job.salary}</td>
+                                <td><button onClick={() => handleDeleteJob(job.id)}>Delete</button></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             ) : (
                 <p>No jobs found.</p>
             )}

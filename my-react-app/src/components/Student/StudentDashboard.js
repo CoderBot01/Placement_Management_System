@@ -7,6 +7,7 @@ import ViewProfilePage from './View';
 import ProgressPage from './Progress';
 import Resume from './Resume';
 import JobRecommendation from './Recommend';
+import InterviewAt from "./Interview"
 function StudentDashboard() {
     const [activeTab, setActiveTab] = useState('edit');
 
@@ -26,6 +27,8 @@ function StudentDashboard() {
                 <button onClick={() => handleTabChange('training')}>Training and Development</button>
                 <button onClick={() => handleTabChange('progress')}>Progress Tracker</button>
                 <button onClick={() => handleTabChange('recommendations')}>Job Recommendations</button>
+                <button onClick={() => handleTabChange('interview')}>Interviews</button>
+
             </nav>
             <section>
                 {activeTab === 'view' && <ViewProfilePage/>}
@@ -34,6 +37,8 @@ function StudentDashboard() {
                 {activeTab === 'training' && <TrainingDevelopmentPage/>}
                 {activeTab === 'progress' && <ProgressPage/>}
                 {activeTab === 'recommendations' && <JobRecommendation/>}
+                {activeTab === 'interview' && <InterviewAt/>}
+
                 {/* Additional content for each section */}
             </section>
           

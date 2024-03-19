@@ -1,38 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const JobRecommendation = () => {
-  const [recommendedJobs, setRecommendedJobs] = useState([]);
+function JobsComponent() {
+  const [jobs, setJobs] = useState([]);
 
-  const fetchRecommendedJobs = async () => {
-    try {
-      const response = await fetch('/api/recommended-jobs');
-      if (!response.ok) {
-        throw new Error('Failed to fetch recommended jobs');
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch('/path/to/jobs.json'); // Update the path to your JSON file
+        const data = await response.json();
+        setJobs(data);
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
       }
-      const data = await response.json();
-      setRecommendedJobs(data.jobs);
-    } catch (error) {
-      console.error('Error fetching recommended jobs:', error);
-    }
-  };
-  
+    };
+
+    fetchJobs();
+  }, []);
+
   return (
     <div>
-      <h1>Recommended Jobs</h1>
-      <button onClick={fetchRecommendedJobs}>Fetch Recommendations</button>
+      <h1>Job Listings</h1>
       <ul>
-        {recommendedJobs.map((job, index) => (
+        {jobs.map((job, index) => (
           <li key={index}>
-            <div>{job.title}</div>
-            <div>{job.company}</div>
-            <div>{job.location}</div>
-            <div>{job.description}</div>
-            <a href={job.link}>Apply Now</a>
+            <h3>{job.title}</h3>
+            <p>{job.company}</p>
+            <p>{job.location}</p>
+            <a href={job.url}>Apply</a>
           </li>
         ))}
       </ul>
     </div>
   );
-};
+}
 
-export default JobRecommendation;
+export default JobsComponent;

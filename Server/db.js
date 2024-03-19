@@ -39,22 +39,26 @@ class Database {
             );            
             `,
             `
-            CREATE TABLE IF NOT EXISTS training (
-                ID SERIAL PRIMARY KEY,
-                Title VARCHAR(255),
-                Description TEXT,
-                Duration TIME
-            );            
-            `,
-            `
-            CREATE TABLE IF NOT EXISTS scheule (
-                ID SERIAL PRIMARY KEY,
-                StudentName VARCHAR(255),
-                CompanyName VARCHAR(255),
-                InterviewTitle VARCHAR(255),
-                UpdateLink TEXT,
-                InterviewSession TIMESTAMP
+            CREATE TABLE IF NOT EXISTS trainings (
+                id SERIAL PRIMARY KEY,
+                title VARCHAR(255),
+                description VARCHAR(255),
+                duration INTEGER,
+                fees INTEGER
             );
+                        
+            `,
+
+            `
+            CREATE TABLE  IF NOT EXISTS Interviews (
+                id SERIAL PRIMARY KEY,
+                studentName VARCHAR(255),
+                companyName VARCHAR(255),
+                interviewTitle VARCHAR(255),
+                interviewSession TIMESTAMP,
+                link VARCHAR(255)
+            );
+            
                         
             `,
             // Define other table creation queries here
