@@ -1,11 +1,14 @@
 import express from 'express';
-import cors from 'cors'; // Import cors middleware
+import bodyParser from 'body-parser';
+import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+import cors from 'cors';
 import Database from './db.js';
-import scrapeJobs from "./Recommend.js";
+import scrapeJobs from './Recommend.js';
 
 const app = express();
-const port = 3000;
-
+const PORT = process.env.PORT || 3000;
+const SECRET_KEY = 'your_secret_key'; // Change this to a random secret key
 
 const dbConnectionString = "postgres://cuwpckyy:CNY7RgFzNLQ0S_9LlHNqn8mVYqCmBE_r@floppy.db.elephantsql.com/cuwpckyy";
 const database = new Database(dbConnectionString);
@@ -15,10 +18,60 @@ database.connect()
     .then(() => database.createTables())
     .catch(error => console.error('Error connecting to the database:', error));
 
-app.use(cors()); // Add cors middleware
-
+// Middleware
+app.use(cors());
 app.use(express.json());
 
+// AES decryption function
+function decryptAES(encryptedString, key) {
+    const decipher = crypto.createDecipheriv('aes192', key);
+    let decrypted = decipher.update(encryptedString, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+}
+
+// Temporary storage for decrypted credentials
+let temporaryStorage = {};
+
+// Route for login
+app.post('/login', (req, res) => {
+    const { encryptedUsername, encryptedPassword } = req.body;
+
+    // Decrypt username and password
+    const username = decryptAES(encryptedUsername, SECRET_KEY);
+    const password = decryptAES(encryptedPassword, SECRET_KEY);
+
+    // Store the credentials temporarily (for 6 hours)
+    temporaryStorage[username] = { password, timestamp: Date.now() };
+
+    // Generate JWT token with expiration after 6 hours
+    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '6h' });
+
+    res.json({ token });
+});
+
+// Middleware to verify JWT token
+function verifyToken(req, res, next) {
+    const token = req.headers['authorization'];
+
+    if (!token)
+        return res.status(403).json({ message: 'Token not provided' });
+
+    jwt.verify(token, SECRET_KEY, (err, decoded) => {
+        if (err)
+            return res.status(401).json({ message: 'Failed to authenticate token' });
+
+        req.username = decoded.username;
+        next();
+    });
+}
+
+// Route for protected resource
+app.get('/protected', verifyToken, (req, res) => {
+    res.json({ message: 'You have access to the protected resource!' });
+});
+
+// Route to get all students
 app.get('/students', async (req, res) => {
     try {
         const result = await database.client.query('SELECT * FROM students');
@@ -29,6 +82,7 @@ app.get('/students', async (req, res) => {
     }
 });
 
+// Route to get all jobs
 app.get('/jobs', async (req, res) => {
     try {
         const result = await database.client.query('SELECT * FROM jobs');
@@ -39,7 +93,7 @@ app.get('/jobs', async (req, res) => {
     }
 });
 
-
+// Route to get all trainings
 app.get('/trainings', async (req, res) => {
     try {
         const result = await database.client.query('SELECT * FROM trainings');
@@ -50,10 +104,10 @@ app.get('/trainings', async (req, res) => {
     }
 });
 
-
-app.get('/Interviews', async (req, res) => {
+// Route to get all interviews
+app.get('/interviews', async (req, res) => {
     try {
-        const result = await database.client.query('SELECT * FROM Interviews');
+        const result = await database.client.query('SELECT * FROM interviews');
         res.json(result.rows);
     } catch (err) {
         console.error('Error getting data', err);
@@ -61,17 +115,11 @@ app.get('/Interviews', async (req, res) => {
     }
 });
 
-
-app.get('/', async (req, res) => {
-    res.status(200).json({ response: 'Welcome' });
-});
-
-
-app.get('/Recommend', async (req, res) => {
+// Route to recommend jobs
+app.get('/recommend', async (req, res) => {
     const data = scrapeJobs();
     res.status(200).json({ response: data });
 });
-
 
 app.post('/jobs', async (req, res) => {
     console.log(req.body)
@@ -87,9 +135,9 @@ app.post('/jobs', async (req, res) => {
 
 app.post('/students', async (req, res) => {
     console.log(req.body)
-    const { studentId, name, department, year, cgpa } = req.body;
+    const { studentId, name, department, year, dob, cgpa } = req.body;
     try {
-        await database.client.query('INSERT INTO students(studentId, name, department, year, cgpa) VALUES($1, $2, $3, $4, $5)', [studentId, name, department, year, cgpa]);
+        await database.client.query('INSERT INTO students(studentId, name, department, year, dob, cgpa) VALUES($1, $2, $3, $4, $5, $6)', [studentId, name, department, year, dob, cgpa]);
         res.status(201).json({ message: 'Student added successfully' });
     } catch (err) {
         console.error('Error inserting data', err);

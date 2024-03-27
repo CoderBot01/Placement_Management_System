@@ -25,6 +25,7 @@ class Database {
                 name VARCHAR(255) NOT NULL,
                 department VARCHAR(255),
                 year INTEGER,
+                DOB VARCHAR(20),
                 cgpa NUMERIC(3, 2),
                 is_active BOOLEAN DEFAULT TRUE
             );            

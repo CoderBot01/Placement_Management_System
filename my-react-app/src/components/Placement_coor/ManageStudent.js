@@ -11,6 +11,7 @@ function StudentManagement() {
     const [department, setDepartment] = useState('');
     const [year, setYear] = useState('');
     const [cgpa, setCGPA] = useState('');
+    const [dob, setDOB] = useState('');
     const [selectedDepartments, setSelectedDepartments] = useState([]);
     const [searchedStudents, setSearchedStudents] = useState([]);
     const [alertMessage, setAlertMessage] = useState('');
@@ -34,7 +35,7 @@ function StudentManagement() {
     };
 
     const addStudent = async () => {
-        const newStudent = { studentId, name, department, year, cgpa };
+        const newStudent = { studentId, name, department, year, dob, cgpa };
 
         try {
             const addResponse = await fetch('http://localhost:3000/students', {
@@ -56,6 +57,7 @@ function StudentManagement() {
             setDepartment('');
             setYear('');
             setCGPA('');
+            setDOB('');
         } catch (error) {
             console.error('Error adding student:', error);
             // Handle error
@@ -142,6 +144,8 @@ function StudentManagement() {
             </select>
             <input type="text" placeholder="Year" value={year} onChange={e => setYear(e.target.value)} />
             <input type="text" placeholder="CGPA" value={cgpa} onChange={e => setCGPA(e.target.value)} />
+            <input type="text" placeholder="DOB" value={dob} onChange={e => setDOB(e.target.value)} />
+
             <button onClick={addStudent}>Add Student</button>
 
             <h2 className="head">Search Students by Department</h2>
@@ -167,6 +171,7 @@ function StudentManagement() {
                             <tr>
                                 <th>Student ID</th>
                                 <th>Name</th>
+                                <th>DOB</th>
                                 <th>Department</th>
                                 <th>Year</th>
                                 <th>GPA</th>
@@ -178,6 +183,7 @@ function StudentManagement() {
                                 <tr key={student.studentid}>
                                     <td>{student.studentid}</td>
                                     <td>{student.name}</td>
+                                    <td>{student.dob}</td>
                                     <td>{student.department}</td>
                                     <td>{student.year}</td>
                                     <td>{student.cgpa}</td>
