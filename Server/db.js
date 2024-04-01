@@ -62,7 +62,46 @@ class Database {
             
                         
             `,
-            // Define other table creation queries here
+            `
+            CREATE TABLE IF NOT EXISTS StudentInformation (
+                ID SERIAL PRIMARY KEY,
+                FullName VARCHAR(100),
+                DateOfBirth DATE,
+                ContactEmail VARCHAR(100),
+                ContactPhone VARCHAR(15),
+                ContactAddress VARCHAR(255),
+                BriefBio TEXT,
+                GPA DECIMAL(3, 1),
+                AwardsHonors VARCHAR(255),
+                Scholarships VARCHAR(255),
+                ExtracurricularActivities VARCHAR(255),
+                TechnicalSkills VARCHAR(255),
+                SoftSkills VARCHAR(255),
+                LanguageProficiency VARCHAR(255),
+                ReactJSCertification BOOLEAN,
+                DateOfCompletion DATE,
+                IssuingOrganization VARCHAR(100),
+                Course1Grade VARCHAR(2),
+                Course2Grade VARCHAR(2),
+                Course3Grade VARCHAR(2),
+                Transcripts BYTEA,
+                ResearchProjects TEXT,
+                PortfolioLink VARCHAR(255),
+                SportsInvolvement VARCHAR(255),
+                ClubsOrganizations VARCHAR(255),
+                VolunteerWork VARCHAR(255),
+                LeadershipRoles VARCHAR(255),
+                Internships VARCHAR(255),
+                PartTimeJobs VARCHAR(255),
+                RelevantWorkExperience TEXT,
+                ReferencesInfo TEXT
+            );
+            
+            
+            
+            
+                        
+            `,
         ];
 
         try {

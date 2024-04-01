@@ -8,7 +8,7 @@ import scrapeJobs from './Recommend.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const SECRET_KEY = 'your_secret_key'; // Change this to a random secret key
+const SECRET_KEY = 'Th!$I$@ENcYPt!0nKEY@1212'; // Change this to a random secret key
 
 const dbConnectionString = "postgres://cuwpckyy:CNY7RgFzNLQ0S_9LlHNqn8mVYqCmBE_r@floppy.db.elephantsql.com/cuwpckyy";
 const database = new Database(dbConnectionString);
@@ -23,23 +23,36 @@ app.use(cors());
 app.use(express.json());
 
 // AES decryption function
-function decryptAES(encryptedString, key) {
-    const decipher = crypto.createDecipheriv('aes192', key);
-    let decrypted = decipher.update(encryptedString, 'hex', 'utf8');
+// AES decryption function
+// AES decryption function
+// AES decryption function
+// AES decryption function
+function decryptAES(encryptedString, key, iv) {
+    console.log("Encrypted string:", encryptedString);
+    console.log("Key:", key);
+    console.log("IV:", iv);
+    iv = iv.toString('base64'); // Correct assignment of IV string
+    const decipher = crypto.createDecipheriv('aes192', key, Buffer.from(iv, 'base64')); // Pass IV directly without base64 conversion
+    let decrypted = decipher.update(encryptedString, 'base64', 'utf8');
     decrypted += decipher.final('utf8');
+    console.log("Decrypted:", decrypted);
     return decrypted;
 }
+
 
 // Temporary storage for decrypted credentials
 let temporaryStorage = {};
 
 // Route for login
 app.post('/login', (req, res) => {
-    const { encryptedUsername, encryptedPassword } = req.body;
+    console.log(req.body);
+    const { username, password } = req.body;
 
     // Decrypt username and password
-    const username = decryptAES(encryptedUsername, SECRET_KEY);
-    const password = decryptAES(encryptedPassword, SECRET_KEY);
+    const Username = decryptAES(username, SECRET_KEY);
+    const Password = decryptAES(password, SECRET_KEY);
+    console.log("Username:", Username);
+    console.log("Password:", Password);
 
     // Store the credentials temporarily (for 6 hours)
     temporaryStorage[username] = { password, timestamp: Date.now() };
@@ -115,6 +128,16 @@ app.get('/interviews', async (req, res) => {
     }
 });
 
+app.get('/StudentInformation', async (req, res) => {
+    try {
+        const result = await database.client.query('SELECT * FROM StudentInformation');
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Route to recommend jobs
 app.get('/recommend', async (req, res) => {
     const data = scrapeJobs();
@@ -170,6 +193,17 @@ app.post('/Interviews', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+app.post('/StudentInformation', async (req, res) => {
+    console.log(req.body);
+    const { FullName, DateOfBirth, ContactEmail, ContactPhone, ContactAddress, BriefBio, GPA, AwardsHonors, Scholarships, ExtracurricularActivities, TechnicalSkills, SoftSkills, LanguageProficiency, ReactJSCertification, DateOfCompletion, IssuingOrganization, Course1Grade, Course2Grade, Course3Grade, Transcripts, ResearchProjects, PortfolioLink, SportsInvolvement, ClubsOrganizations, VolunteerWork, LeadershipRoles, Internships, PartTimeJobs, RelevantWorkExperience, ReferencesInfo } = req.body;
+    try {
+        await database.client.query('INSERT INTO StudentInformation(FullName, DateOfBirth, ContactEmail, ContactPhone, ContactAddress, BriefBio, GPA, AwardsHonors, Scholarships, ExtracurricularActivities, TechnicalSkills, SoftSkills, LanguageProficiency, ReactJSCertification, DateOfCompletion, IssuingOrganization, Course1Grade, Course2Grade, Course3Grade, Transcripts, ResearchProjects, PortfolioLink, SportsInvolvement, ClubsOrganizations, VolunteerWork, LeadershipRoles, Internships, PartTimeJobs, RelevantWorkExperience, ReferencesInfo) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31)', [FullName, DateOfBirth, ContactEmail, ContactPhone, ContactAddress, BriefBio, GPA, AwardsHonors, Scholarships, ExtracurricularActivities, TechnicalSkills, SoftSkills, LanguageProficiency, ReactJSCertification, DateOfCompletion, IssuingOrganization, Course1Grade, Course2Grade, Course3Grade, Transcripts, ResearchProjects, PortfolioLink, SportsInvolvement, ClubsOrganizations, VolunteerWork, LeadershipRoles, Internships, PartTimeJobs, RelevantWorkExperience, ReferencesInfo]);
+        res.status(201).json({ message: 'Student information added successfully' });
+    } catch (err) {
+        console.error('Error inserting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 
 app.delete('/students/:Id', async (req, res) => {
@@ -208,6 +242,6 @@ app.delete('/Interviews/:id', async (req, res) => {
 
 
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
