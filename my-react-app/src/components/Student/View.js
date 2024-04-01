@@ -1,21 +1,168 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './View.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import BaseUrl from "./Constant.js";
 
 const StudentProfile = () => {
+    // State for active section and editing mode
     const [activeSection, setActiveSection] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
+
+    // State variables for personal information
+    const [ID, setID] = useState('');
+    const [students1, setStudents1] = useState([]);
+    const [fullName, setFullName] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [address, setAddress] = useState('');
+    const [bio, setBio] = useState('');
+
+    // State variables for academic achievements
+    const [gpa, setGPA] = useState('');
+    const [awards, setAwards] = useState('');
+    const [scholarships, setScholarships] = useState('');
+    const [extracurricularActivities, setExtracurricularActivities] = useState('');
+
+    // State variables for skills
+    const [technicalSkills, setTechnicalSkills] = useState('');
+    const [softSkills, setSoftSkills] = useState('');
+    const [languageProficiency, setLanguageProficiency] = useState('');
+
+    // State variables for certifications
+    const [certification, setCertification] = useState('');
+    const [completionDate, setCompletionDate] = useState('');
+    const [issuingOrganization, setIssuingOrganization] = useState('');
+
+    // State variables for academic records
+    const [course1, setCourse1] = useState('');
+    const [course1Grade, setCourse1Grade] = useState('');
+    const [course2, setCourse2] = useState('');
+    const [course2Grade, setCourse2Grade] = useState('');
+    const [course3, setCourse3] = useState('');
+    const [course3Grade, setCourse3Grade] = useState('');
+    const [transcripts, setTranscripts] = useState('');
+    const [researchProjects, setResearchProjects] = useState('');
+
+    // State variables for portfolio
+    const [portfolioProjects, setPortfolioProjects] = useState('');
+    const [portfolioLinks, setPortfolioLinks] = useState('');
+
+    // State variables for extracurricular activities
+    const [sportsInvolvement, setSportsInvolvement] = useState('');
+    const [clubs, setClubs] = useState('');
+    const [volunteerWork, setVolunteerWork] = useState('');
+    const [leadershipRoles, setLeadershipRoles] = useState('');
+
+    // State variables for work experience
+    const [internships, setInternships] = useState('');
+    const [partTimeJobs, setPartTimeJobs] = useState('');
+    const [workExperience, setWorkExperience] = useState('');
+
+    // State variable for references
+    const [references, setReferences] = useState('');
+
+    // Reference to the profile container
     const profileRef = useRef(null);
 
+    // Function to toggle active section
     const toggleSection = (index) => {
-        setActiveSection(index === activeSection ? null : index);
+        setActiveSection(activeSection === index ? null : index);
     };
 
+    // Function to toggle editing mode
     const toggleEditing = () => {
         setIsEditing(!isEditing);
     };
 
+    // Function to handle input changes
+    const handleInputChange = (setState, value) => {
+        setState(value);
+    };
+
+
+    useEffect(() => {
+        return () => {
+            fetchStudents1();
+        };
+    }, []);
+
+    const fetchStudents1 = async () => {
+        try {
+            const response = await fetch(`${BaseUrl}StudentInformation`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch students');
+            }
+            const data = await response.json();
+            setStudents1(data);
+        } catch (error) {
+            console.error('Error fetching students:', error);
+            // Handle error
+        }
+    };
+
+    const addStudent1 = async () => {
+        const newStudent1 = { ID, fullName, dateOfBirth, email, phone, address, bio, gpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, references };
+
+        try {
+            const addResponse = await fetch(`${BaseUrl}StudentInformation`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newStudent1),
+            });
+
+            if (!addResponse.ok) {
+                throw new Error('Failed to add StudentInformation');
+            }
+
+            fetchStudents1();
+
+            setID('');
+            setFullName('');
+            setDateOfBirth('');
+            setEmail('');
+            setPhone('');
+            setAddress('');
+            setBio('');
+            setGPA('');
+            setAwards('');
+            setScholarships('');
+            setExtracurricularActivities('');
+            setTechnicalSkills('');
+            setSoftSkills('');
+            setLanguageProficiency('');
+            setCertification('');
+            setCompletionDate('');
+            setIssuingOrganization('');
+            setCourse1('');
+            setCourse1Grade('');
+            setCourse2('');
+            setCourse2Grade('');
+            setCourse3('');
+            setCourse3Grade('');
+            setTranscripts('');
+            setResearchProjects('');
+            setPortfolioProjects('');
+            setPortfolioLinks('');
+            setSportsInvolvement('');
+            setClubs('');
+            setVolunteerWork('');
+            setLeadershipRoles('');
+            setInternships('');
+            setPartTimeJobs('');
+            setWorkExperience('');
+            setReferences('');
+
+        } catch (error) {
+            console.error('Error adding student:', error);
+            // Handle error
+        }
+    };
+
+    // Function to export profile as PDF
     const exportAsPDF = () => {
         const input = profileRef.current;
         html2canvas(input).then((canvas) => {
@@ -33,9 +180,9 @@ const StudentProfile = () => {
             // Add additional data to the PDF
             pdf.setFontSize(12);
             pdf.text('Additional Data:', 10, imgHeight + 10); // Adjust position according to your needs
-            pdf.text('Name: John Doe', 10, imgHeight + 20);
-            pdf.text('Age: 24', 10, imgHeight + 30);
-            pdf.text('Email: john.doe@example.com', 10, imgHeight + 40);
+            pdf.text(`Name: ${fullName}`, 10, imgHeight + 20);
+            pdf.text(`Date of Birth: ${dateOfBirth}`, 10, imgHeight + 30);
+            pdf.text(`Email: ${email}`, 10, imgHeight + 40);
 
             // Example of adding data from the component state
             // if you have more complex data, you need to format it properly before adding it to the PDF
@@ -53,197 +200,210 @@ const StudentProfile = () => {
             pdf.save('student_profile.pdf');
         });
     };
+
     return (
         <div ref={profileRef} className="student-profile">
-            <button onClick={toggleEditing}>{isEditing ? 'Save Changes' : 'Edit'}</button>
+            <button onClick={isEditing ? addStudent1 : toggleEditing}>
+                {isEditing ? 'Save Changes' : 'Edit'}
+            </button>
+
+
+            {/* Personal Information Section */}
             <section className={`section personal-info ${activeSection === 0 ? 'active' : ''}`} onClick={() => toggleSection(0)}>
                 <h2>Personal Information</h2>
                 <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <input type="text" defaultValue="John Doe" />
-                            <input type="text" defaultValue="January 1, 2000" />
-                            <input type="text" defaultValue="john.doe@email.com" />
-                            <input type="text" defaultValue="123-456-7890" />
-                            <input type="text" defaultValue="123 Main St, City, State" />
-                            <textarea defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit..." />
+                            <input type="text" name="StudentID" placeholder="Student ID" value={ID} onChange={(e) => setID(e.target.value)} />
+                            <input type="text" name="fullName" placeholder="Full Name" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+                            <input type="date" name="dateOfBirth" placeholder="Date of Birth" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
+                            <input type="text" name="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <input type="text" name="phone" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                            <input type="text" name="address" placeholder="Address" value={address} onChange={(e) => setAddress(e.target.value)} />
+                            <textarea name="bio" placeholder="Brief Bio" value={bio} onChange={(e) => setBio(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>Full Name: John Doe</p>
-                            <p>Date of Birth: January 1, 2000</p>
-                            <p>Contact Information: john.doe@email.com | 123-456-7890 | 123 Main St, City, State</p>
-                            <p>Brief Bio: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                            <p>StudentID: {ID}</p>
+                            <p>Full Name: {fullName}</p>
+                            <p>Date of Birth: {dateOfBirth}</p>
+                            <p>Contact Information: {email} | {phone} | {address}</p>
+                            <p>Brief Bio: {bio}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* Academic Achievements Section */}
             <section className={`section academic-achievements ${activeSection === 1 ? 'active' : ''}`} onClick={() => toggleSection(1)}>
                 <h2>Academic Achievements</h2>
                 <div className="section-content">
+                    {/* Editing mode */}
                     {isEditing ? (
                         <div>
-                            <label>GPA: <input type="text" defaultValue="3.8" /></label>
-                            <label>Awards/Honors: <input type="text" defaultValue="Dean's List, Academic Excellence Award" /></label>
-                            <label>Scholarships: <input type="text" defaultValue="Merit Scholarship" /></label>
-                            <label>Extracurricular Activities: <input type="text" defaultValue="Math Club President, Science Fair Participant" /></label>
+                            <input type="text" name="gpa" placeholder="GPA" value={gpa} onChange={(e) => setGPA(e.target.value)} />
+                            <input type="text" name="awards" placeholder="Awards/Honors" value={awards} onChange={(e) => setAwards(e.target.value)} />
+                            <input type="text" name="scholarships" placeholder="Scholarships" value={scholarships} onChange={(e) => setScholarships(e.target.value)} />
+                            <input type="text" name="extracurricularActivities" placeholder="Extracurricular Activities" value={extracurricularActivities} onChange={(e) => setExtracurricularActivities(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>GPA: 3.8</p>
-                            <p>Awards/Honors: Dean's List, Academic Excellence Award</p>
-                            <p>Scholarships: Merit Scholarship</p>
-                            <p>Extracurricular Activities: Math Club President, Science Fair Participant</p>
+                            <p>GPA: {gpa}</p>
+                            <p>Awards/Honors: {awards}</p>
+                            <p>Scholarships: {scholarships}</p>
+                            <p>Extracurricular Activities: {extracurricularActivities}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* Other sections with similar modifications */}
+            {/* Skills Section */}
             <section className={`section skills ${activeSection === 2 ? 'active' : ''}`} onClick={() => toggleSection(2)}>
                 <h2>Skills</h2>
-                <div className={`section-content ${activeSection === 2 ? 'active' : ''}`}>
+                <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <label>Technical Skills: <input type="text" defaultValue="JavaScript, React.js, HTML/CSS" /></label>
-                            <label>Soft Skills: <input type="text" defaultValue="Communication, Leadership, Teamwork" /></label>
-                            <label>Language Proficiency: <input type="text" defaultValue="English (Fluent), Spanish (Intermediate)" /></label>
+                            <input type="text" name="technicalSkills" placeholder="Technical Skills" value={technicalSkills} onChange={(e) => setTechnicalSkills(e.target.value)} />
+                            <input type="text" name="softSkills" placeholder="Soft Skills" value={softSkills} onChange={(e) => setSoftSkills(e.target.value)} />
+                            <input type="text" name="languageProficiency" placeholder="Language Proficiency" value={languageProficiency} onChange={(e) => setLanguageProficiency(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>Technical Skills: JavaScript, React.js, HTML/CSS</p>
-                            <p>Soft Skills: Communication, Leadership, Teamwork</p>
-                            <p>Language Proficiency: English (Fluent), Spanish (Intermediate)</p>
+                            <p>Technical Skills: {technicalSkills}</p>
+                            <p>Soft Skills: {softSkills}</p>
+                            <p>Language Proficiency: {languageProficiency}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* Certifications Section */}
             <section className={`section certifications ${activeSection === 3 ? 'active' : ''}`} onClick={() => toggleSection(3)}>
                 <h2>Certifications</h2>
-                <div className={`section-content ${activeSection === 3 ? 'active' : ''}`}>
+                <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <label>Certification: <input type="text" defaultValue="React.js Certification" /></label>
-                            <label>Date of Completion: <input type="text" defaultValue="January 2023" /></label>
-                            <label>Issuing Organization: <input type="text" defaultValue="XYZ Certification Center" /></label>
+                            <input type="text" name="certification" placeholder="Certification" value={certification} onChange={(e) => setCertification(e.target.value)} />
+                            <input type="text" name="completionDate" placeholder="Date of Completion" value={completionDate} onChange={(e) => setCompletionDate(e.target.value)} />
+                            <input type="text" name="issuingOrganization" placeholder="Issuing Organization" value={issuingOrganization} onChange={(e) => setIssuingOrganization(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>React.js Certification</p>
-                            <p>Date of Completion: January 2023</p>
-                            <p>Issuing Organization: XYZ Certification Center</p>
+                            <p>Certification: {certification}</p>
+                            <p>Date of Completion: {completionDate}</p>
+                            <p>Issuing Organization: {issuingOrganization}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* Academic Records Section */}
             <section className={`section academic-records ${activeSection === 4 ? 'active' : ''}`} onClick={() => toggleSection(4)}>
                 <h2>Academic Records</h2>
-                <div className={`section-content ${activeSection === 4 ? 'active' : ''}`}>
+                <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <p>List of Courses Completed:</p>
-                            <ul>
-                                <li>Course 1: <input type="text" defaultValue="A" /></li>
-                                <li>Course 2: <input type="text" defaultValue="B+" /></li>
-                                <li>Course 3: <input type="text" defaultValue="A-" /></li>
-                            </ul>
-                            <label>Transcripts: <input type="text" defaultValue="Uploaded" /></label>
-                            <label>Research Projects/Theses: <textarea defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit..." /></label>
+                            <input type="text" name="course1" placeholder="Course 1" value={course1} onChange={(e) => setCourse1(e.target.value)} />
+                            <input type="text" name="course1Grade" placeholder="Grade" value={course1Grade} onChange={(e) => setCourse1Grade(e.target.value)} />
+                            <input type="text" name="course2" placeholder="Course 2" value={course2} onChange={(e) => setCourse2(e.target.value)} />
+                            <input type="text" name="course2Grade" placeholder="Grade" value={course2Grade} onChange={(e) => setCourse2Grade(e.target.value)} />
+                            <input type="text" name="course3" placeholder="Course 3" value={course3} onChange={(e) => setCourse3(e.target.value)} />
+                            <input type="text" name="course3Grade" placeholder="Grade" value={course3Grade} onChange={(e) => setCourse3Grade(e.target.value)} />
+                            <input type="text" name="transcripts" placeholder="Transcripts" value={transcripts} onChange={(e) => setTranscripts(e.target.value)} />
+                            <textarea name="researchProjects" placeholder="Research Projects/Theses" value={researchProjects} onChange={(e) => setResearchProjects(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>List of Courses Completed:</p>
-                            <ul>
-                                <li>Course 1: A</li>
-                                <li>Course 2: B+</li>
-                                <li>Course 3: A-</li>
-                            </ul>
-                            <p>Transcripts: Uploaded</p>
-                            <p>Research Projects/Theses: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                            <p>Course 1: {course1} - Grade: {course1Grade}</p>
+                            <p>Course 2: {course2} - Grade: {course2Grade}</p>
+                            <p>Course 3: {course3} - Grade: {course3Grade}</p>
+                            <p>Transcripts: {transcripts}</p>
+                            <p>Research Projects/Theses: {researchProjects}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* Portfolio Section */}
             <section className={`section portfolio ${activeSection === 5 ? 'active' : ''}`} onClick={() => toggleSection(5)}>
                 <h2>Portfolio</h2>
-                <div className={`section-content ${activeSection === 5 ? 'active' : ''}`}>
+                <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <label>Showcase any projects, papers, or presentations you're proud of: <textarea defaultValue="" /></label>
-                            <label>Provide links to online portfolios or repositories if available: <input type="text" defaultValue="" /></label>
+                            <textarea name="portfolioProjects" placeholder="Projects, Papers, or Presentations" value={portfolioProjects} onChange={(e) => setPortfolioProjects(e.target.value)} />
+                            <input type="text" name="portfolioLinks" placeholder="Links to Online Portfolios or Repositories" value={portfolioLinks} onChange={(e) => setPortfolioLinks(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>Showcase any projects, papers, or presentations you're proud of</p>
-                            <p>Provide links to online portfolios or repositories if available</p>
+                            <p>Projects, Papers, or Presentations: {portfolioProjects}</p>
+                            <p>Links to Online Portfolios or Repositories: {portfolioLinks}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* Extracurricular Activities Section */}
             <section className={`section extracurricular-activities ${activeSection === 6 ? 'active' : ''}`} onClick={() => toggleSection(6)}>
                 <h2>Extracurricular Activities</h2>
-                <div className={`section-content ${activeSection === 6 ? 'active' : ''}`}>
+                <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <label>Sports Involvement: <input type="text" defaultValue="Soccer Team Captain" /></label>
-                            <label>Clubs/Organizations: <input type="text" defaultValue="Debate Club Member" /></label>
-                            <label>Volunteer Work: <input type="text" defaultValue="Local Community Clean-up" /></label>
-                            <label>Leadership Roles: <input type="text" defaultValue="Class Representative" /></label>
+                            <input type="text" name="sportsInvolvement" placeholder="Sports Involvement" value={sportsInvolvement} onChange={(e) => setSportsInvolvement(e.target.value)} />
+                            <input type="text" name="clubs" placeholder="Clubs/Organizations" value={clubs} onChange={(e) => setClubs(e.target.value)} />
+                            <input type="text" name="volunteerWork" placeholder="Volunteer Work" value={volunteerWork} onChange={(e) => setVolunteerWork(e.target.value)} />
+                            <input type="text" name="leadershipRoles" placeholder="Leadership Roles" value={leadershipRoles} onChange={(e) => setLeadershipRoles(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>Sports Involvement: Soccer Team Captain</p>
-                            <p>Clubs/Organizations: Debate Club Member</p>
-                            <p>Volunteer Work: Local Community Clean-up</p>
-                            <p>Leadership Roles: Class Representative</p>
+                            <p>Sports Involvement: {sportsInvolvement}</p>
+                            <p>Clubs/Organizations: {clubs}</p>
+                            <p>Volunteer Work: {volunteerWork}</p>
+                            <p>Leadership Roles: {leadershipRoles}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* Work Experience Section */}
             <section className={`section work-experience ${activeSection === 7 ? 'active' : ''}`} onClick={() => toggleSection(7)}>
                 <h2>Work Experience</h2>
-                <div className={`section-content ${activeSection === 7 ? 'active' : ''}`}>
+                <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <label>Internships: <input type="text" defaultValue="ABC Company (Summer 2022)" /></label>
-                            <label>Part-time Jobs: <input type="text" defaultValue="Retail Associate at XYZ Store" /></label>
-                            <label>Relevant Work Experience: <textarea defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit..." /></label>
+                            <input type="text" name="internships" placeholder="Internships" value={internships} onChange={(e) => setInternships(e.target.value)} />
+                            <input type="text" name="partTimeJobs" placeholder="Part-time Jobs" value={partTimeJobs} onChange={(e) => setPartTimeJobs(e.target.value)} />
+                            <textarea name="workExperience" placeholder="Relevant Work Experience" value={workExperience} onChange={(e) => setWorkExperience(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>Internships: ABC Company (Summer 2022)</p>
-                            <p>Part-time Jobs: Retail Associate at XYZ Store</p>
-                            <p>Relevant Work Experience: Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+                            <p>Internships: {internships}</p>
+                            <p>Part-time Jobs: {partTimeJobs}</p>
+                            <p>Relevant Work Experience: {workExperience}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+            {/* References Section */}
             <section className={`section references ${activeSection === 8 ? 'active' : ''}`} onClick={() => toggleSection(8)}>
                 <h2>References</h2>
-                <div className={`section-content ${activeSection === 8 ? 'active' : ''}`}>
+                <div className="section-content">
                     {isEditing ? (
                         <div>
-                            <label>Contact information for academic or professional references: <input type="text" defaultValue="" /></label>
+                            <input type="text" name="references" placeholder="Contact Information for References" value={references} onChange={(e) => setReferences(e.target.value)} />
                         </div>
                     ) : (
                         <div>
-                            <p>Contact information for academic or professional references</p>
+                            <p>Contact Information for References: {references}</p>
                         </div>
                     )}
                 </div>
             </section>
 
+
+            {/* Button to export profile as PDF */}
             <button onClick={exportAsPDF}>Export as PDF</button>
-
-
-
-
         </div>
     );
 };

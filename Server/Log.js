@@ -1,21 +1,57 @@
-import { randomBytes, createCipheriv } from 'crypto';
+import crypto from 'crypto';
 
-function encryptAES(plaintext, key) {
-    // Convert the key string to a buffer with correct length (32 bytes for AES-256)
-    const keyBuffer = Buffer.from(key, 'utf-8');
+// Define a static IV
+const staticIV = Buffer.from('0123456789ABCDEF0123456789ABCDEF', 'hex');
+const staticKey = Buffer.from('0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF', 'hex');
 
-    const iv = randomBytes(16); // Generate a random IV (Initialization Vector)
-    const cipher = createCipheriv('aes-256-cbc', keyBuffer, iv);
+function encryptMessage(message, key, iv) {
+    // Convert message to buffers
+    const messageBuffer = Buffer.from(message, 'utf8');
 
-    let ciphertext = cipher.update(plaintext, 'utf8', 'base64');
-    ciphertext += cipher.final('base64');
+    // Create cipher object with AES algorithm and CBC mode
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
 
-    const encodedIV = iv.toString('base64');
-    return encodedIV + ':' + ciphertext; // Concatenate IV and ciphertext with a separator
+    // Pad the message
+    let paddedData = Buffer.concat([messageBuffer, Buffer.alloc(16 - (messageBuffer.length % 16), 16 - (messageBuffer.length % 16))]);
+
+    // Encrypt the message
+    let encrypted = cipher.update(paddedData);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+    // Return ciphertext
+    return encrypted.toString('hex');
 }
 
-// Example usage:
-const plaintext = 'admin';
-const key = 'Th!$I$@ENcYPt!0nKEY@1212';
-const encryptedText = encryptAES(plaintext, key);
-console.log('Encrypted text:', encryptedText);
+function decryptMessage(ciphertext, key, iv) {
+    // Convert ciphertext and IV to buffers
+    const ciphertextBuffer = Buffer.from(ciphertext, 'hex');
+
+    // Create decipher object with AES algorithm and CBC mode
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+
+    // Decrypt the ciphertext
+    let decrypted = decipher.update(ciphertextBuffer);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    // Remove padding
+    const lastByte = decrypted[decrypted.length - 1];
+    const paddingSize = lastByte;
+    const unpaddedData = decrypted.slice(0, decrypted.length - paddingSize);
+
+    // Return decrypted message as string
+    return unpaddedData.toString('utf8');
+}
+
+
+
+
+const username = 'admin'; // Username to encrypt
+
+// Encrypt the username with static IV
+const encryptedUsername = encryptMessage(username, staticKey, staticIV);
+console.log("Encrypted:", encryptedUsername);
+
+
+// Decrypt the username with static IV
+const decryptedUsername = decryptMessage(encryptedUsername, staticKey, staticIV);
+console.log("Decrypted:", decryptedUsername);

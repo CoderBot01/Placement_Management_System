@@ -1,28 +1,47 @@
 import React, { useState } from 'react';
 import './Login.css'; // Import CSS for styling
 import Login from "./Login.jpg";
-import CryptoJS from 'crypto-js';
+import crypto  from 'crypto';
+import BaseUrl from './Student/Constant';
+
 
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
 
+    const staticIV = Buffer.from('0123456789ABCDEF0123456789ABCDEF', 'hex');
+const staticKey = Buffer.from('0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF', 'hex');
 
-    const encryptData = (data) => {
-        const key = 'your_secret_key'; // Replace with your secret key
-        const encryptedData = CryptoJS.AES.encrypt(data, key).toString();
-        return encryptedData;
-    };
+function encryptMessage(message, key, iv) {
+    // Convert message to buffers
+    const messageBuffer = Buffer.from(message, 'utf8');
+
+    // Create cipher object with AES algorithm and CBC mode
+    const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+
+    // Pad the message
+    let paddedData = Buffer.concat([messageBuffer, Buffer.alloc(16 - (messageBuffer.length % 16), 16 - (messageBuffer.length % 16))]);
+
+    // Encrypt the message
+    let encrypted = cipher.update(paddedData);
+    encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+    // Return ciphertext
+    return encrypted.toString('hex');
+}
+
+    // Example usage
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const encryptedUsername = encryptData(username);
-            const encryptedPassword = encryptData(password);
+            const encryptedUsername = encryptMessage(username);
+            const encryptedPassword = encryptMessage(password);
 
-            const response = await fetch(`${BaseUrl}/jobs`, {
+            const response = await fetch(`${BaseUrl}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -73,8 +92,5 @@ function LoginPage() {
         </div>
     );
 }
-
-
-
 
 export default LoginPage;

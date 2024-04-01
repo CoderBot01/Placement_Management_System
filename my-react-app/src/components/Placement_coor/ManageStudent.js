@@ -3,6 +3,7 @@ import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import './mgstu.css';
+import { BaseUrl } from './Constant';
 
 function StudentManagement() {
     const [students, setStudents] = useState([]);
@@ -16,33 +17,37 @@ function StudentManagement() {
     const [searchedStudents, setSearchedStudents] = useState([]);
     const [alertMessage, setAlertMessage] = useState('');
 
+
     useEffect(() => {
         fetchStudents();
     }, []);
 
     const fetchStudents = async () => {
         try {
-            const response = await fetch('http://localhost:3000/students');
+            const response = await fetch(`${BaseUrl}students`);
             if (!response.ok) {
-                throw new Error('Failed to fetch students');
+                throw new Error('Failed to fetch students. Server returned status: ' + response.status);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format. Expected JSON, got ' + contentType);
             }
             const data = await response.json();
             setStudents(data);
         } catch (error) {
             console.error('Error fetching students:', error);
-            // Handle error
+            // Display an error message to the user
+            setAlertMessage('Failed to fetch students. Please try again later.');
         }
     };
+    
 
     const addStudent = async () => {
         const newStudent = { studentId, name, department, year, dob, cgpa };
 
         try {
-            const addResponse = await fetch('http://localhost:3000/students', {
+            const addResponse = await fetch(`${BaseUrl}students`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
                 body: JSON.stringify(newStudent),
             });
 
@@ -66,7 +71,7 @@ function StudentManagement() {
 
     const searchByDepartments = async () => {
         try {
-            const response = await fetch('http://localhost:3000/students');
+            const response = await fetch(`${BaseUrl}students`);
             if (!response.ok) {
                 throw new Error('Failed to fetch students');
             }
@@ -108,7 +113,7 @@ function StudentManagement() {
 
     const handleDelete = async (studentId) => {
         try {
-            const deleteResponse = await fetch(`http://localhost:3000/students/${studentId}`, {
+            const deleteResponse = await fetch(`${BaseUrl}students/${studentId}`, {
                 method: 'DELETE',
             });
 

@@ -8,10 +8,15 @@ import scrapeJobs from './Recommend.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const SECRET_KEY = 'Th!$I$@ENcYPt!0nKEY@1212'; // Change this to a random secret key
+
 
 const dbConnectionString = "postgres://cuwpckyy:CNY7RgFzNLQ0S_9LlHNqn8mVYqCmBE_r@floppy.db.elephantsql.com/cuwpckyy";
 const database = new Database(dbConnectionString);
+
+
+const staticIV = Buffer.from('0123456789ABCDEF0123456789ABCDEF', 'hex');
+const staticKey = Buffer.from('0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF', 'hex');
+
 
 // Connect to the database and create tables
 database.connect()
@@ -23,21 +28,27 @@ app.use(cors());
 app.use(express.json());
 
 // AES decryption function
-// AES decryption function
-// AES decryption function
-// AES decryption function
-// AES decryption function
-function decryptAES(encryptedString, key, iv) {
-    console.log("Encrypted string:", encryptedString);
-    console.log("Key:", key);
-    console.log("IV:", iv);
-    iv = iv.toString('base64'); // Correct assignment of IV string
-    const decipher = crypto.createDecipheriv('aes192', key, Buffer.from(iv, 'base64')); // Pass IV directly without base64 conversion
-    let decrypted = decipher.update(encryptedString, 'base64', 'utf8');
-    decrypted += decipher.final('utf8');
-    console.log("Decrypted:", decrypted);
-    return decrypted;
+
+function decryptMessage(ciphertext, key, iv) {
+    // Convert ciphertext and IV to buffers
+    const ciphertextBuffer = Buffer.from(ciphertext, 'hex');
+
+    // Create decipher object with AES algorithm and CBC mode
+    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
+
+    // Decrypt the ciphertext
+    let decrypted = decipher.update(ciphertextBuffer);
+    decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+    // Remove padding
+    const lastByte = decrypted[decrypted.length - 1];
+    const paddingSize = lastByte;
+    const unpaddedData = decrypted.slice(0, decrypted.length - paddingSize);
+
+    // Return decrypted message as string
+    return unpaddedData.toString('utf8');
 }
+
 
 
 // Temporary storage for decrypted credentials
@@ -49,16 +60,17 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
     // Decrypt username and password
-    const Username = decryptAES(username, SECRET_KEY);
-    const Password = decryptAES(password, SECRET_KEY);
-    console.log("Username:", Username);
-    console.log("Password:", Password);
+    const Username = decryptMessage(username, staticKey, staticIV);
+    const Password = decryptMessage(password, staticKey, staticIV);
+  
+
 
     // Store the credentials temporarily (for 6 hours)
     temporaryStorage[username] = { password, timestamp: Date.now() };
 
     // Generate JWT token with expiration after 6 hours
-    const token = jwt.sign({ username }, SECRET_KEY, { expiresIn: '6h' });
+    const token = jwt.sign({ username }, staticKey, { expiresIn: '6h' });
+   
 
     res.json({ token });
 });
