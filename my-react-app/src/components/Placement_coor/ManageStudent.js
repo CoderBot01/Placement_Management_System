@@ -3,11 +3,12 @@ import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import './mgstu.css';
-import { BaseUrl } from './Constant';
+import BaseUrl from '../Student/Constant';
+
 
 function StudentManagement() {
     const [students, setStudents] = useState([]);
-    const [studentId, setStudentId] = useState('');
+    const [student_id, setStudentId] = useState('');
     const [name, setName] = useState('');
     const [department, setDepartment] = useState('');
     const [year, setYear] = useState('');
@@ -24,7 +25,7 @@ function StudentManagement() {
 
     const fetchStudents = async () => {
         try {
-            const response = await fetch(`${BaseUrl}students`);
+            const response = await fetch(`${BaseUrl}/students`);
             if (!response.ok) {
                 throw new Error('Failed to fetch students. Server returned status: ' + response.status);
             }
@@ -43,10 +44,10 @@ function StudentManagement() {
     
 
     const addStudent = async () => {
-        const newStudent = { studentId, name, department, year, dob, cgpa };
+        const newStudent = { student_id, name, department, year, dob, cgpa  };
 
         try {
-            const addResponse = await fetch(`${BaseUrl}students`, {
+            const addResponse = await fetch(`${BaseUrl}/students`, {
                 method: 'POST',
                 body: JSON.stringify(newStudent),
             });
@@ -71,7 +72,7 @@ function StudentManagement() {
 
     const searchByDepartments = async () => {
         try {
-            const response = await fetch(`${BaseUrl}students`);
+            const response = await fetch(`${BaseUrl}/students`);
             if (!response.ok) {
                 throw new Error('Failed to fetch students');
             }
@@ -111,9 +112,9 @@ function StudentManagement() {
         }
     };
 
-    const handleDelete = async (studentId) => {
+    const handleDelete = async (student_id) => {
         try {
-            const deleteResponse = await fetch(`${BaseUrl}students/${studentId}`, {
+            const deleteResponse = await fetch(`${BaseUrl}students/${student_id}`, {
                 method: 'DELETE',
             });
 
@@ -122,7 +123,7 @@ function StudentManagement() {
             }
 
             // Filter out the deleted student from searchedStudents
-            setSearchedStudents(searchedStudents.filter(student => student.studentid !== studentId));
+            setSearchedStudents(searchedStudents.filter(student => student.studentid !== student_id));
 
             fetchStudents();
         } catch (error) {
@@ -134,7 +135,7 @@ function StudentManagement() {
     return (
         <div>
             <h2 className="head">Add Student</h2>
-            <input type="text" placeholder="Student ID" value={studentId} onChange={e => setStudentId(e.target.value)} />
+            <input type="text" placeholder="Student ID" value={student_id} onChange={e => setStudentId(e.target.value)} />
             {alertMessage && <div className="alert">{alertMessage}</div>}
             <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
             <select value={department} onChange={e => setDepartment(e.target.value)}>

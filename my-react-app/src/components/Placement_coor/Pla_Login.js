@@ -1,25 +1,19 @@
 import React, { useState } from 'react';
-import './Login.css'; // Import CSS for styling
-import Login from "./Login.jpg";
-import BaseUrl from './Student/Constant';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import BaseUrl from '../Student/Constant';
+import PlacementDash from './PlacementDash';
 
-
-function LoginPage() {
+function LoginPage1() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
-   
-
-    // Example usage
-
+    const [authenticated, setAuthenticated] = useState(false); // State to track authentication status
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            
-            const response = await fetch(`${BaseUrl}/login`, {
+            const response = await fetch(`${BaseUrl}/coordinator/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -31,7 +25,12 @@ function LoginPage() {
                 throw new Error('Login failed');
             }
 
+            // Assuming the server returns a token upon successful authentication
             const data = await response.json();
+
+            // Set authenticated to true upon successful login
+            setAuthenticated(true);
+
             // Handle successful login, e.g., store token in local storage, redirect, etc.
             console.log('Login successful:', data);
         } catch (error) {
@@ -39,6 +38,11 @@ function LoginPage() {
             console.error('Login error:', error.message);
         }
     };
+
+    // Render PlacementDash if authenticated
+    if (authenticated) {
+        return <PlacementDash />;
+    }
 
     return (
         <div>
@@ -71,4 +75,4 @@ function LoginPage() {
     );
 }
 
-export default LoginPage;
+export default LoginPage1;

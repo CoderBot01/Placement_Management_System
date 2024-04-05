@@ -14,7 +14,7 @@ import TrainingPage from "./components/Placement_coor/Training";
 import ProgressTracker from "./components/Placement_coor/Progress";
 import InterviewScheduler from "./components/Placement_coor/Schedule";
 import LoginPage from "./components/Login";
-
+import LoginPage1 from "./components/Placement_coor/Pla_Login";
 
 
 export default function App() {
@@ -40,11 +40,16 @@ export default function App() {
             path="/login"
             element={<LoginForm onSubmit={handleFormSubmit} />}
           />
+         
           <Route path="/Login" element={<LoginForm />} />
           <Route
             path="/StudentDashboard"
             element={<StudentDashboard {...formData} />}
           />
+          <Route
+          path="/LoginPage1"
+          element={<LoginPage1 {...formData} />}
+        />
            <Route
             path="/PlacementDash"
             element={<PlacementDash {...formData} />}

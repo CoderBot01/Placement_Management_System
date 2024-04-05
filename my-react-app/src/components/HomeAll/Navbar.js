@@ -7,6 +7,7 @@ import StudentDashboard from "../Student/StudentDashboard";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import LoginPage from "../Login";
+import LoginPage1 from "../Placement_coor/Pla_Login";
 
 const Navbar = () => {
   const [clicked, setClicked] = useState(false);
@@ -38,7 +39,7 @@ const Navbar = () => {
               <FontAwesomeIcon icon={faUser} /> Login
             </button>
             <div className="dropdown-content">
-              <Link to="/PlacementDash">Placement Coordinator</Link>
+              <Link to="/LoginPage1">Placement Coordinator</Link>
               <Link to="/StudentDashboard">Student</Link>
               <Link to="/LoginPage">Login</Link>
             </div>

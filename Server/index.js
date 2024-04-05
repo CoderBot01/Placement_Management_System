@@ -1,3 +1,4 @@
+// Import necessary modules
 import express from 'express';
 import bodyParser from 'body-parser';
 import crypto from 'crypto';
@@ -9,14 +10,8 @@ import scrapeJobs from './Recommend.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
-const dbConnectionString = "postgres://cuwpckyy:CNY7RgFzNLQ0S_9LlHNqn8mVYqCmBE_r@floppy.db.elephantsql.com/cuwpckyy";
-const database = new Database(dbConnectionString);
-
-
-const staticIV = Buffer.from('0123456789ABCDEF0123456789ABCDEF', 'hex');
-const staticKey = Buffer.from('0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF', 'hex');
-
+const dbFilePath = 'database.db';
+const database = new Database(dbFilePath);
 
 // Connect to the database and create tables
 database.connect()
@@ -27,152 +22,106 @@ database.connect()
 app.use(cors());
 app.use(express.json());
 
-// AES decryption function
+// Set a default secret key for JWT signing
+const JWT_SECRET = 'your_secret_key_here'; // Replace with your actual secret key
 
-function decryptMessage(ciphertext, key, iv) {
-    // Convert ciphertext and IV to buffers
-    const ciphertextBuffer = Buffer.from(ciphertext, 'hex');
-
-    // Create decipher object with AES algorithm and CBC mode
-    const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-
-    // Decrypt the ciphertext
-    let decrypted = decipher.update(ciphertextBuffer);
-    decrypted = Buffer.concat([decrypted, decipher.final()]);
-
-    // Remove padding
-    const lastByte = decrypted[decrypted.length - 1];
-    const paddingSize = lastByte;
-    const unpaddedData = decrypted.slice(0, decrypted.length - paddingSize);
-
-    // Return decrypted message as string
-    return unpaddedData.toString('utf8');
-}
-
-
-
-// Temporary storage for decrypted credentials
-let temporaryStorage = {};
-
-// Route for login
-app.post('/login', (req, res) => {
-    console.log(req.body);
-    const { username, password } = req.body;
-
-    // Decrypt username and password
-    const Username = decryptMessage(username, staticKey, staticIV);
-    const Password = decryptMessage(password, staticKey, staticIV);
-  
-
-
-    // Store the credentials temporarily (for 6 hours)
-    temporaryStorage[username] = { password, timestamp: Date.now() };
-
-    // Generate JWT token with expiration after 6 hours
-    const token = jwt.sign({ username }, staticKey, { expiresIn: '6h' });
-   
-
-    res.json({ token });
-});
+// Token storage
+const tokenStorage = {};
 
 // Middleware to verify JWT token
-function verifyToken(req, res, next) {
+const verifyToken = (req, res, next) => {
     const token = req.headers['authorization'];
-
-    if (!token)
-        return res.status(403).json({ message: 'Token not provided' });
-
-    jwt.verify(token, SECRET_KEY, (err, decoded) => {
-        if (err)
-            return res.status(401).json({ message: 'Failed to authenticate token' });
-
-        req.username = decoded.username;
+    if (!token) {
+        return res.status(403).json({ error: 'Token is required' });
+    }
+    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+        req.user = decoded;
         next();
     });
-}
+};
 
-// Route for protected resource
-app.get('/protected', verifyToken, (req, res) => {
-    res.json({ message: 'You have access to the protected resource!' });
+// Route for student login
+app.post('/student/login', async (req, res) => {
+    const { student_id, dob } = req.body;
+    try {
+        const result = await database.client.get('SELECT * FROM students WHERE student_id = ? AND dob = ?', [student_id, dob]);
+        if (result) {
+            // Generate token
+            const tokenPayload = {
+                student_id: result.student_id,
+                role: 'student'
+            };
+            const token = jwt.sign(tokenPayload, JWT_SECRET);
+            // Store token with student_id
+            tokenStorage[token] = { student_id, role: 'student' };
+            // Set token in response header
+            res.setHeader('Authorization', token);
+            // Send response
+            return res.status(200).json({ message: 'Login successful', token });
+        } else {
+            return res.status(401).json({ error: 'Invalid student_id or dob' });
+        }
+    } catch (err) {
+        console.error('Error during student login:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
-// Route to get all students
-app.get('/students', async (req, res) => {
+// Route for coordinator login
+app.post('/coordinator/login', async (req, res) => {
+    const { username, password } = req.body;
+    if (username === 'admin' && password === 'admin') {
+        // Generate token
+        const tokenPayload = {
+            username: 'admin',
+            role: 'coordinator'
+        };
+        const token = jwt.sign(tokenPayload, JWT_SECRET);
+        // Store token with username
+        tokenStorage[token] = { username: 'admin', role: 'coordinator' };
+        // Set token in response header
+        res.setHeader('Authorization', token);
+        // Send response
+        return res.status(200).json({ message: 'Login successful', token });
+    } else {
+        return res.status(401).json({ error: 'Invalid username or password' });
+    }
+});
+
+// Routes for coordinators
+app.use('/coordinator', verifyToken, (req, res, next) => {
+    if (req.user.role !== 'coordinator') {
+        return res.status(403).json({ error: 'Unauthorized access' });
+    }
+    next();
+});
+
+// Routes for students
+app.use('/student', verifyToken, (req, res, next) => {
+    if (req.user.role !== 'student') {
+        return res.status(403).json({ error: 'Unauthorized access' });
+    }
+    next();
+});
+
+// Coordinator routes
+app.get('/coordinator/students', async (req, res) => {
     try {
-        const result = await database.client.query('SELECT * FROM students');
-        res.json(result.rows);
+        const result = await database.client.all('SELECT * FROM students');
+        res.json(result);
     } catch (err) {
         console.error('Error getting data', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Route to get all jobs
-app.get('/jobs', async (req, res) => {
+app.post('/coordinator/students', async (req, res) => {
+    const { student_id, name, department, year, dob, cgpa } = req.body;
     try {
-        const result = await database.client.query('SELECT * FROM jobs');
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error getting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// Route to get all trainings
-app.get('/trainings', async (req, res) => {
-    try {
-        const result = await database.client.query('SELECT * FROM trainings');
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error getting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// Route to get all interviews
-app.get('/interviews', async (req, res) => {
-    try {
-        const result = await database.client.query('SELECT * FROM interviews');
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error getting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-app.get('/StudentInformation', async (req, res) => {
-    try {
-        const result = await database.client.query('SELECT * FROM StudentInformation');
-        res.json(result.rows);
-    } catch (err) {
-        console.error('Error getting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// Route to recommend jobs
-app.get('/recommend', async (req, res) => {
-    const data = scrapeJobs();
-    res.status(200).json({ response: data });
-});
-
-app.post('/jobs', async (req, res) => {
-    console.log(req.body)
-    const { companyInfo, jobDescription, jobTitle, salary } = req.body;
-    try {
-        await database.client.query('INSERT INTO jobs( job_title, job_description, company_info, salary) VALUES($1, $2, $3, $4)', [companyInfo, jobDescription, jobTitle, salary]);
-        res.status(201).json({ message: 'jobadded successfully' });
-    } catch (err) {
-        console.error('Error inserting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-app.post('/students', async (req, res) => {
-    console.log(req.body)
-    const { studentId, name, department, year, dob, cgpa } = req.body;
-    try {
-        await database.client.query('INSERT INTO students(studentId, name, department, year, dob, cgpa) VALUES($1, $2, $3, $4, $5, $6)', [studentId, name, department, year, dob, cgpa]);
+        await database.client.run('INSERT INTO students(student_id, name, department, year, dob, cgpa) VALUES(?, ?, ?, ?, ?, ?)', [student_id, name, department, year, dob, cgpa]);
         res.status(201).json({ message: 'Student added successfully' });
     } catch (err) {
         console.error('Error inserting data', err);
@@ -180,79 +129,36 @@ app.post('/students', async (req, res) => {
     }
 });
 
-
-app.post('/trainings', async (req, res) => {
-    console.log(req.body);
-    const { title, description, duration, fees } = req.body;
+app.delete('/coordinator/students/:student_id', async (req, res) => {
+    const { student_id } = req.params;
     try {
-        await database.client.query('INSERT INTO trainings(title, description, duration, fees) VALUES($1, $2, $3, $4)', [title, description, duration, fees]);
-        res.status(201).json({ message: 'training added successfully' });
-    } catch (err) {
-        console.error('Error inserting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-
-app.post('/Interviews', async (req, res) => {
-    console.log(req.body);
-    const { studentName, companyName, interviewTitle, interviewSession, link } = req.body;
-    try {
-        await database.client.query('INSERT INTO Interviews(studentName, companyName, interviewTitle, interviewSession, link) VALUES($1, $2, $3, $4, $5)', [studentName, companyName, interviewTitle, interviewSession, link]);
-        res.status(201).json({ message: 'Interviews added successfully' });
-    } catch (err) {
-        console.error('Error inserting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-app.post('/StudentInformation', async (req, res) => {
-    console.log(req.body);
-    const { FullName, DateOfBirth, ContactEmail, ContactPhone, ContactAddress, BriefBio, GPA, AwardsHonors, Scholarships, ExtracurricularActivities, TechnicalSkills, SoftSkills, LanguageProficiency, ReactJSCertification, DateOfCompletion, IssuingOrganization, Course1Grade, Course2Grade, Course3Grade, Transcripts, ResearchProjects, PortfolioLink, SportsInvolvement, ClubsOrganizations, VolunteerWork, LeadershipRoles, Internships, PartTimeJobs, RelevantWorkExperience, ReferencesInfo } = req.body;
-    try {
-        await database.client.query('INSERT INTO StudentInformation(FullName, DateOfBirth, ContactEmail, ContactPhone, ContactAddress, BriefBio, GPA, AwardsHonors, Scholarships, ExtracurricularActivities, TechnicalSkills, SoftSkills, LanguageProficiency, ReactJSCertification, DateOfCompletion, IssuingOrganization, Course1Grade, Course2Grade, Course3Grade, Transcripts, ResearchProjects, PortfolioLink, SportsInvolvement, ClubsOrganizations, VolunteerWork, LeadershipRoles, Internships, PartTimeJobs, RelevantWorkExperience, ReferencesInfo) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31)', [FullName, DateOfBirth, ContactEmail, ContactPhone, ContactAddress, BriefBio, GPA, AwardsHonors, Scholarships, ExtracurricularActivities, TechnicalSkills, SoftSkills, LanguageProficiency, ReactJSCertification, DateOfCompletion, IssuingOrganization, Course1Grade, Course2Grade, Course3Grade, Transcripts, ResearchProjects, PortfolioLink, SportsInvolvement, ClubsOrganizations, VolunteerWork, LeadershipRoles, Internships, PartTimeJobs, RelevantWorkExperience, ReferencesInfo]);
-        res.status(201).json({ message: 'Student information added successfully' });
-    } catch (err) {
-        console.error('Error inserting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-
-app.delete('/students/:Id', async (req, res) => {
-    const id = req.params.Id;
-    try {
-        await database.client.query('DELETE FROM students WHERE studentId = $1', [id]);
+        await database.client.run('DELETE FROM students WHERE student_id = ?', [student_id]);
         res.json({ message: 'Student deleted successfully' });
     } catch (err) {
-        console.error('Error deleting data', err);
+        console.error('Error deleting student', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
+// Add more coordinator routes as needed
 
-app.delete('/jobs/:id', async (req, res) => {
-    const id = req.params.id;
+// Student routes
+app.get('/student/jobs', async (req, res) => {
     try {
-        await database.client.query('DELETE FROM jobs WHERE id = $1', [id]);
-        res.json({ message: 'Job deleted successfully' });
+        const result = await database.client.all('SELECT * FROM jobs');
+        res.json(result);
     } catch (err) {
-        console.error('Error deleting data', err);
+        console.error('Error getting data', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-app.delete('/Interviews/:id', async (req, res) => {
-    const id = req.params.id;
-    try {
-        await database.client.query('DELETE FROM Interviews WHERE id = $1', [id]);
-        res.json({ message: 'Interviews deleted successfully' });
-    } catch (err) {
-        console.error('Error deleting data', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
+app.get('/student/recommend', async (req, res) => {
+    const data = scrapeJobs();
+    res.status(200).json({ response: data });
 });
 
-
+// Add more student routes as needed
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
