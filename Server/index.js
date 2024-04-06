@@ -153,6 +153,19 @@ app.get('/student/jobs', async (req, res) => {
     }
 });
 
+app.post('/student/jobs', async (req, res) => {
+    const { jobTitle, jobDescription, companyInfo, salary } = req.body;
+    try {
+        // Assuming you have a database object named 'database'
+        await database.client.run('INSERT INTO jobs(jobTitle, jobDescription, companyInfo, salary) VALUES(?, ?, ?, ?)', [jobTitle, jobDescription, companyInfo, salary]);
+        res.status(201).json({ message: 'Job added successfully' });
+    } catch (err) {
+        console.error('Error inserting job data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
 app.get('/student/recommend', async (req, res) => {
     const data = scrapeJobs();
     res.status(200).json({ response: data });

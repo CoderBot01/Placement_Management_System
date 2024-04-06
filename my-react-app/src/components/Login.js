@@ -2,23 +2,18 @@ import React, { useState } from 'react';
 import './Login.css'; // Import CSS for styling
 import Login from "./Login.jpg";
 import BaseUrl from './Student/Constant';
-
+import StudentDashboard from './Student/StudentDashboard'; // Import the Student Dashboard component
 
 function LoginPage() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-
-   
-
-    // Example usage
-
+    const [authenticated, setAuthenticated] = useState(false); // State to manage authentication
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            
             const response = await fetch(`${BaseUrl}/login`, {
                 method: 'POST',
                 headers: {
@@ -32,13 +27,19 @@ function LoginPage() {
             }
 
             const data = await response.json();
-            // Handle successful login, e.g., store token in local storage, redirect, etc.
+            // Handle successful login
+            setAuthenticated(true); // Set authenticated to true
             console.log('Login successful:', data);
         } catch (error) {
             setError('Login failed. Please check your credentials.');
             console.error('Login error:', error.message);
         }
     };
+
+    // Render StudentDashboard if authenticated
+    if (authenticated) {
+        return <StudentDashboard />;
+    }
 
     return (
         <div>
