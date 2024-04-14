@@ -13,7 +13,7 @@ import JobPostingForm from "./components/Placement_coor/Postjob";
 import TrainingPage from "./components/Placement_coor/Training";
 import ProgressTracker from "./components/Placement_coor/Progress";
 import InterviewScheduler from "./components/Placement_coor/Schedule";
-import LoginPage from "./components/Login";
+import LoginPage from "./components/Student/Login";
 import LoginPage1 from "./components/Placement_coor/Pla_Login";
 
 

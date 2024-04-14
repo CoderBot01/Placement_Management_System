@@ -3,7 +3,13 @@ import sqlite3 from 'sqlite3';
 class Database {
     constructor(dbFilePath) {
         this.dbFilePath = dbFilePath;
-        this.db = new sqlite3.Database(dbFilePath);
+        this.db = new sqlite3.Database(dbFilePath, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
+            if (err) {
+                console.error('Error opening database:', err);
+            } else {
+                console.log('Connected to the database');
+            }
+        });
     }
 
     async connect() {
@@ -17,70 +23,7 @@ class Database {
 
     async createTables() {
         const createTablesQueries = [
-            `CREATE TABLE IF NOT EXISTS students (
-                student_id VARCHAR(12) PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                department VARCHAR(255),
-                year INTEGER,
-                dob VARCHAR(20),
-                cgpa NUMERIC(3, 2),
-                is_active BOOLEAN DEFAULT TRUE
-            )`,
-            `CREATE TABLE IF NOT EXISTS jobs (
-                id INTEGER PRIMARY KEY,
-                job_title VARCHAR(255) NOT NULL,
-                job_description TEXT,
-                company_info TEXT,
-                salary DECIMAL(10, 2)
-            )`,
-            `CREATE TABLE IF NOT EXISTS trainings (
-                id INTEGER PRIMARY KEY,
-                title VARCHAR(255),
-                description VARCHAR(255),
-                duration INTEGER,
-                fees INTEGER
-            )`,
-            `CREATE TABLE IF NOT EXISTS interviews (
-                id INTEGER PRIMARY KEY,
-                student_name VARCHAR(255),
-                company_name VARCHAR(255),
-                interview_title VARCHAR(255),
-                interview_session TIMESTAMP,
-                link VARCHAR(255)
-            )`,
-            `CREATE TABLE IF NOT EXISTS student_information (
-                id INTEGER PRIMARY KEY,
-                full_name VARCHAR(100),
-                date_of_birth DATE,
-                contact_email VARCHAR(100),
-                contact_phone VARCHAR(15),
-                contact_address VARCHAR(255),
-                brief_bio TEXT,
-                gpa DECIMAL(3, 1),
-                awards_honors VARCHAR(255),
-                scholarships VARCHAR(255),
-                extracurricular_activities VARCHAR(255),
-                technical_skills VARCHAR(255),
-                soft_skills VARCHAR(255),
-                language_proficiency VARCHAR(255),
-                reactjs_certification BOOLEAN,
-                date_of_completion DATE,
-                issuing_organization VARCHAR(100),
-                course1_grade VARCHAR(2),
-                course2_grade VARCHAR(2),
-                course3_grade VARCHAR(2),
-                transcripts BLOB,
-                research_projects TEXT,
-                portfolio_link VARCHAR(255),
-                sports_involvement VARCHAR(255),
-                clubs_organizations VARCHAR(255),
-                volunteer_work VARCHAR(255),
-                leadership_roles VARCHAR(255),
-                internships VARCHAR(255),
-                part_time_jobs VARCHAR(255),
-                relevant_work_experience TEXT,
-                references_info TEXT
-            )`
+            // Define your table creation queries here
         ];
 
         return new Promise((resolve, reject) => {
@@ -95,6 +38,38 @@ class Database {
                 });
                 console.log('Tables created successfully');
                 resolve();
+            });
+        });
+    }
+
+    async checkIfInTable(table, columnValues) {
+        const conditions = Object.keys(columnValues).map(column => `${column} = ?`).join(' AND ');
+        const values = Object.values(columnValues);
+
+        return new Promise((resolve, reject) => {
+            this.db.get(`SELECT * FROM ${table} WHERE ${conditions}`, values, (err, row) => {
+                if (err) {
+                    console.error('Error checking if values exist in table:', err);
+                    reject(err);
+                }
+                resolve(row);
+            });
+        });
+    }
+
+    async insertData(table, data) {
+        const columns = Object.keys(data).join(',');
+        const placeholders = Object.keys(data).map(() => '?').join(',');
+        const values = Object.values(data);
+
+        return new Promise((resolve, reject) => {
+            this.db.run(`INSERT INTO ${table} (${columns}) VALUES (${placeholders})`, values, function(err) {
+                if (err) {
+                    console.error('Error inserting data:', err);
+                    reject(err);
+                }
+                console.log(`Data inserted successfully with ID: ${this.lastID}`);
+                resolve(this.lastID);
             });
         });
     }

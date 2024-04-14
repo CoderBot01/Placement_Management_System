@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import './mgstu.css';
 import BaseUrl from '../Student/Constant';
+import { getData } from './functions';
 
 
 function StudentManagement() {
@@ -25,14 +26,11 @@ function StudentManagement() {
 
     const fetchStudents = async () => {
         try {
-            const response = await fetch(`${BaseUrl}/students`);
+            const response = await getData('/jobs');
             if (!response.ok) {
                 throw new Error('Failed to fetch students. Server returned status: ' + response.status);
             }
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Invalid response format. Expected JSON, got ' + contentType);
-            }
+            console.log(response);
             const data = await response.json();
             setStudents(data);
         } catch (error) {

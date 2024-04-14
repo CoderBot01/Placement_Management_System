@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "./job.css";
+import { getData } from './functions';
 
 function JobPostingForm() {
     const [jobs, setJobs] = useState([]);
@@ -14,12 +15,13 @@ function JobPostingForm() {
 
     const fetchJobs = async () => {
         try {
-            const response = await fetch('http://localhost:3000/jobs');
+            const response = await getData('/jobs');
             if (!response.ok) {
                 throw new Error('Failed to fetch jobs');
             }
             const data = await response.json();
             setJobs(data);
+            console.log(data);
         } catch (error) {
             console.error('Error fetching jobs:', error);
         }

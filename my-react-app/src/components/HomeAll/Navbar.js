@@ -6,7 +6,7 @@ import PlacementDash from "../Placement_coor/PlacementDash";
 import StudentDashboard from "../Student/StudentDashboard";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import LoginPage from "../Login";
+import LoginPage from "../Student/Login";
 import LoginPage1 from "../Placement_coor/Pla_Login";
 
 const Navbar = () => {

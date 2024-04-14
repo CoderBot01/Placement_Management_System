@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import './Login.css'; // Import CSS for styling
 import Login from "./Login.jpg";
-import BaseUrl from './Student/Constant';
-import StudentDashboard from './Student/StudentDashboard'; // Import the Student Dashboard component
+import BaseUrl from './Constant';
+import StudentDashboard from './StudentDashboard'; // Import the Student Dashboard component
 
 function LoginPage() {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
+    const [student_id, setStudent_id] = useState('');
+    const [dob , setDob] = useState('');
     const [error, setError] = useState('');
     const [authenticated, setAuthenticated] = useState(false); // State to manage authentication
 
@@ -19,7 +19,7 @@ function LoginPage() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ username: username, password: password })
+                body: JSON.stringify({ student_id: student_id, dob: dob })
             });
 
             if (!response.ok) {
@@ -28,8 +28,8 @@ function LoginPage() {
 
             const data = await response.json();
             // Handle successful login
+            localStorage.setItem('token', data.token); // Store token in local storage
             setAuthenticated(true); // Set authenticated to true
-            console.log('Login successful:', data);
         } catch (error) {
             setError('Login failed. Please check your credentials.');
             console.error('Login error:', error.message);
@@ -46,22 +46,22 @@ function LoginPage() {
             <h2>Login Form</h2>
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="username">Username:</label>
+                    <label htmlFor="username">Student Id:</label>
                     <input
                         type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
+                        id="student_id"
+                        value={student_id}
+                        onChange={(e) => setStudent_id(e.target.value)}
                         required
                     />
                 </div>
                 <div>
-                    <label htmlFor="password">Password:</label>
+                    <label htmlFor="dob">DOB:</label>
                     <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        type="date"
+                        id="dob"
+                        value={dob}
+                        onChange={(e) => setDob(e.target.value)}
                         required
                     />
                 </div>

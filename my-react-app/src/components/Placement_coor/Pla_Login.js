@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import BaseUrl from '../Student/Constant';
+import BaseUrl from './Constant'; // Import BaseUrl from Constant.js
 import PlacementDash from './PlacementDash';
 
 function LoginPage1() {
@@ -13,7 +13,7 @@ function LoginPage1() {
         event.preventDefault();
 
         try {
-            const response = await fetch(`${BaseUrl}/coordinator/login`, {
+            const response = await fetch(`${BaseUrl}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -28,7 +28,7 @@ function LoginPage1() {
             // Assuming the server returns a token upon successful authentication
             const data = await response.json();
 
-            // Set authenticated to true upon successful login
+            localStorage.setItem('token', data.token); // Store token in local storage
             setAuthenticated(true);
 
             // Handle successful login, e.g., store token in local storage, redirect, etc.
