@@ -3,8 +3,8 @@ import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import './mgstu.css';
-import BaseUrl from '../Student/Constant';
-import { getData } from './functions';
+import BaseUrl from './Constant';
+import { getData, postData, deleteData } from './functions';
 
 
 function StudentManagement() {
@@ -45,13 +45,11 @@ function StudentManagement() {
         const newStudent = { student_id, name, department, year, dob, cgpa  };
 
         try {
-            const addResponse = await fetch(`${BaseUrl}/students`, {
-                method: 'POST',
-                body: JSON.stringify(newStudent),
-            });
-
+            const addResponse = await postData('/student', newStudent);
             if (!addResponse.ok) {
                 throw new Error('Failed to add student');
+            } else {
+                console.log('Student added successfully:', addResponse);
             }
 
             fetchStudents();
@@ -70,12 +68,13 @@ function StudentManagement() {
 
     const searchByDepartments = async () => {
         try {
-            const response = await fetch(`${BaseUrl}/students`);
+            const response = await getData('/student');
             if (!response.ok) {
                 throw new Error('Failed to fetch students');
             }
             const data = await response.json();
             const filteredStudents = data.filter(student => selectedDepartments.includes(student.department));
+            console.log('Filtered students:', filteredStudents);
             setSearchedStudents(filteredStudents);
         } catch (error) {
             console.error('Error filtering students:', error);
@@ -112,14 +111,10 @@ function StudentManagement() {
 
     const handleDelete = async (student_id) => {
         try {
-            const deleteResponse = await fetch(`${BaseUrl}students/${student_id}`, {
-                method: 'DELETE',
-            });
-
+            const deleteResponse = await deleteData(`/student/${student_id}`);
             if (!deleteResponse.ok) {
                 throw new Error('Failed to delete student');
             }
-
             // Filter out the deleted student from searchedStudents
             setSearchedStudents(searchedStudents.filter(student => student.studentid !== student_id));
 
@@ -148,7 +143,7 @@ function StudentManagement() {
             </select>
             <input type="text" placeholder="Year" value={year} onChange={e => setYear(e.target.value)} />
             <input type="text" placeholder="CGPA" value={cgpa} onChange={e => setCGPA(e.target.value)} />
-            <input type="text" placeholder="DOB" value={dob} onChange={e => setDOB(e.target.value)} />
+            <input type="date" placeholder="DOB" value={dob} onChange={e => setDOB(e.target.value)} />
 
             <button onClick={addStudent}>Add Student</button>
 
@@ -184,15 +179,15 @@ function StudentManagement() {
                         </thead>
                         <tbody>
                             {searchedStudents.map((student) => (
-                                <tr key={student.studentid}>
-                                    <td>{student.studentid}</td>
+                                <tr key={student.student_id}>
+                                    <td>{student.student_id}</td>
                                     <td>{student.name}</td>
                                     <td>{student.dob}</td>
                                     <td>{student.department}</td>
                                     <td>{student.year}</td>
                                     <td>{student.cgpa}</td>
                                     <td>
-                                        <button onClick={() => handleDelete(student.studentid)}>Delete</button>
+                                        <button onClick={() => handleDelete(student.student_id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}

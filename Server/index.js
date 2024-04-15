@@ -71,6 +71,9 @@ app.get('/coordinator/jobs', async (req, res) => {
 
 app.post('/coordinator/jobs', async (req, res) => {
     const { jobTitle, jobDescription, companyInfo, salary } = req.body;
+    if (!jobTitle || !jobDescription || !companyInfo || !salary) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
     try {
         await database.insertData('jobs', { jobTitle, jobDescription, companyInfo, salary });
         res.status(201).json({ message: 'Job added successfully' });
@@ -80,11 +83,56 @@ app.post('/coordinator/jobs', async (req, res) => {
     }
 });
 
+
+
+app.post('/coordinator/student', async (req, res) => {
+    const { student_id, name, year, department, cgpa, dob } = req.body;
+    if (!student_id || !name || !year || !department || !cgpa || !dob) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    try {
+        await database.insertData('students', { student_id, name, year, department, cgpa, dob });
+        res.status(201).json({ message: 'Student added successfully' });
+    } catch (err) {
+        console.error('Error inserting student data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+app.get('/coordinator/student', async (req, res) => {
+    try {
+        const data = await database.getAll('students');
+        res.json(data);        
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+app.delete('/coordinator/student/:student_id', async (req, res) => {
+    const { student_id } = req.params;
+    try {
+        await database.deleteData('students', { student_id });
+        res.json({ message: 'Student deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting student data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+
+
+
 // Routes for students
 app.use('/student', authenticate);
 
 app.post('/student/login', async (req, res) => {
     const { student_id, dob } = req.body;
+    if (!student_id || !dob) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
     try {
         const student = await database.checkIfInTable('students', { student_id, dob });
         if (student) {
@@ -113,6 +161,12 @@ app.get('/student/jobs', async (req, res) => {
         console.error('Error getting data', err);
         res.status(500).json({ error: 'Internal server error' });
     }
+});
+
+
+
+app.get('/', (req, res) => {
+    res.send('Welcome to the Placement Coordinator API');
 });
 
 app.listen(PORT, () => {

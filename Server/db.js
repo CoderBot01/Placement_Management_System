@@ -74,6 +74,49 @@ class Database {
         });
     }
 
+    async getAll(table) {
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT * FROM ${table}`, (err, rows) => {
+                if (err) {
+                    console.error('Error getting data:', err);
+                    reject(err);
+                }
+                resolve(rows);
+            });
+        });
+    }
+
+    async getWhere(table, columnValues) {
+        const conditions = Object.keys(columnValues).map(column => `${column} = ?`).join(' AND ');
+        const values = Object.values(columnValues);
+
+        return new Promise((resolve, reject) => {
+            this.db.all(`SELECT * FROM ${table} WHERE ${conditions}`, values, (err, rows) => {
+                if (err) {
+                    console.error('Error getting data:', err);
+                    reject(err);
+                }
+                resolve(rows);
+            });
+        });
+    }
+
+    async deleteData(table, columnValues) {
+        const conditions = Object.keys(columnValues).map(column => `${column} = ?`).join(' AND ');
+        const values = Object.values(columnValues);
+
+        return new Promise((resolve, reject) => {
+            this.db.run(`DELETE FROM ${table} WHERE ${conditions}`, values, function(err) {
+                if (err) {
+                    console.error('Error deleting data:', err);
+                    reject(err);
+                }
+                console.log(`Data deleted successfully with ID: ${this.changes}`);
+                resolve(this.changes);
+            });
+        });
+    }
+
     async disconnect() {
         return new Promise((resolve, reject) => {
             this.db.close((err) => {

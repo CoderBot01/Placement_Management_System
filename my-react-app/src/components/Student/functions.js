@@ -1,7 +1,9 @@
-// Import any required libraries or modules here
+import BaseUrl from "./Constant";
 
-// Function for making a POST request
-async function postData(baseUrl, params) {
+
+
+
+async function postData(path, params) {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -10,7 +12,7 @@ async function postData(baseUrl, params) {
             return;
         }
         
-        const response = await fetch(baseUrl, {
+        const response = await fetch(BaseUrl + path, {
             method: 'POST',
             body: JSON.stringify(params),
             headers: {
@@ -27,7 +29,7 @@ async function postData(baseUrl, params) {
 }
 
 // Function for making a GET request
-async function getData(baseUrl, params) {
+async function getData(path, params) {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -36,15 +38,14 @@ async function getData(baseUrl, params) {
             return;
         }
         
-        const response = await fetch(baseUrl, {
+        const response = await fetch(BaseUrl + path, {
             method: 'GET',
             // Add any query parameters to the URL here
             headers: {
                 'Authorization': `Bearer ${token}`
             }
         });
-        const data = await response.json();
-        return data;
+        return response;
     } catch (error) {
         console.error('Error:', error);
         throw error;
@@ -52,7 +53,7 @@ async function getData(baseUrl, params) {
 }
 
 // Function for making a PUT request
-async function putData(baseUrl, params) {
+async function putData(path, params) {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -61,7 +62,7 @@ async function putData(baseUrl, params) {
             return;
         }
         
-        const response = await fetch(baseUrl, {
+        const response = await fetch(BaseUrl + path, {
             method: 'PUT',
             body: JSON.stringify(params),
             headers: {
@@ -78,7 +79,7 @@ async function putData(baseUrl, params) {
 }
 
 // Function for making a DELETE request
-async function deleteData(baseUrl, params) {
+async function deleteData(path, params) {
     try {
         const token = localStorage.getItem('token');
         if (!token) {
@@ -87,7 +88,7 @@ async function deleteData(baseUrl, params) {
             return;
         }
         
-        const response = await fetch(baseUrl, {
+        const response = await fetch(BaseUrl + path, {
             method: 'DELETE',
             // Add any query parameters to the URL here
             headers: {

@@ -40,8 +40,7 @@ const Navbar = () => {
             </button>
             <div className="dropdown-content">
               <Link to="/LoginPage1">Placement Coordinator</Link>
-              <Link to="/StudentDashboard">Student</Link>
-              <Link to="/LoginPage">Login</Link>
+              <Link to="/LoginPage">Student</Link>
             </div>
           </div>
         </li>

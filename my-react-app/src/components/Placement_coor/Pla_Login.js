@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import BaseUrl from './Constant'; // Import BaseUrl from Constant.js
+import { Link } from 'react-router-dom';
+import BaseUrl from './Constant';
 import PlacementDash from './PlacementDash';
+import './Login.css';
+import image from './Login.jpg';
 
 function LoginPage1() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [authenticated, setAuthenticated] = useState(false); // State to track authentication status
+    const [authenticated, setAuthenticated] = useState(false);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -25,13 +27,11 @@ function LoginPage1() {
                 throw new Error('Login failed');
             }
 
-            // Assuming the server returns a token upon successful authentication
             const data = await response.json();
 
-            localStorage.setItem('token', data.token); // Store token in local storage
+            localStorage.setItem('token', data.token);
             setAuthenticated(true);
 
-            // Handle successful login, e.g., store token in local storage, redirect, etc.
             console.log('Login successful:', data);
         } catch (error) {
             setError('Login failed. Please check your credentials.');
@@ -39,38 +39,45 @@ function LoginPage1() {
         }
     };
 
-    // Render PlacementDash if authenticated
     if (authenticated) {
         return <PlacementDash />;
     }
 
     return (
-        <div>
-            <h2>Login Form</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input
-                        type="text"
-                        id="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
+        <div style={{ 
+            backgroundImage: "url('image')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+}}>
+            <div className="login-page-container">
+                <div className="login-form-container">
+                    <h2>COORDINATOR LOGIN</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="username">Username:</label>
+                            <input
+                                type="text"
+                                id="username"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <button type="submit">Login</button>
+                    </form>
+                    {error && <p className="error-message">{error}</p>}
                 </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            {error && <p>{error}</p>}
+            </div>
         </div>
     );
 }
