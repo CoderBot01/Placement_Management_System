@@ -3,15 +3,17 @@ import './View.css';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import BaseUrl from "./Constant.js";
+import { getData, postData, deleteData } from './functions';
 
-const StudentProfile = () => {
+const StudentProfile = ({id}) => {
+    console.log(id)
     // State for active section and editing mode
     const [activeSection, setActiveSection] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
-
+    const [students1, setStudents1] = useState([]);
     // State variables for personal information
     const [ID, setID] = useState('');
-    const [students1, setStudents1] = useState([]);
+    
     const [fullName, setFullName] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [email, setEmail] = useState('');
@@ -83,24 +85,44 @@ const StudentProfile = () => {
 
 
     useEffect(() => {
-        return () => {
-            fetchStudents1();
-        };
-    }, []);
-
-    const fetchStudents1 = async () => {
-        try {
-            const response = await fetch(`${BaseUrl}StudentInformation`);
-            if (!response.ok) {
-                throw new Error('Failed to fetch students');
-            }
-            const data = await response.json();
-            setStudents1(data);
-        } catch (error) {
-            console.error('Error fetching students:', error);
-            // Handle error
+        if (students1 && students1.length > 0) {
+            setID(students1[0].student_id);
+            setFullName(students1[0].name);
+        } else {
+            // Set ID to an empty string if students1 is empty
+            setID('');
         }
-    };
+    }, [students1]);
+
+
+   
+
+    useEffect(() => {
+        const fetchStudents1 = async () => {
+            try {
+                const response = await getData(`/StudentInformation/${id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch students');
+                }
+                const data = await response.json();
+                console.log(data)
+                setStudents1(data);
+           
+            } catch (error) {
+                console.error('Error fetching students:', error);
+                // Handle error
+            }
+        };
+
+        fetchStudents1();
+    }, [id]);
+
+
+    // Move this logging outside the useEffect
+    useEffect(() => {
+        console.log("Student name is:", students1.length > 0 ? students1[0].name : "No student data yet");
+    }, [students1]);
+    
 
     const addStudent1 = async () => {
         const newStudent1 = { ID, fullName, dateOfBirth, email, phone, address, bio, gpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, references };

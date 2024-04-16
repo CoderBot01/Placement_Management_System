@@ -8,7 +8,7 @@ import ProgressPage from './Progress';
 import Resume from './Resume';
 import JobRecommendation from './Recommend';
 import InterviewAt from "./Interview";
-function StudentDashboard() {
+function StudentDashboard({id}) {
     const [activeTab, setActiveTab] = useState('edit');
 
     const handleTabChange = (tab) => {
@@ -31,7 +31,7 @@ function StudentDashboard() {
 
             </nav>
             <section>
-                {activeTab === 'view' && <ViewProfilePage/>}
+                {activeTab === 'view' && <ViewProfilePage id = {id}/>}
                 {activeTab === 'apply' && <ApplyJobPage />}
                 {activeTab === 'resume' && <Resume/>}
                 {activeTab === 'training' && <TrainingDevelopmentPage/>}

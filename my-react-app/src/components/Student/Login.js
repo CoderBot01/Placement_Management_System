@@ -38,7 +38,7 @@ function LoginPage() {
 
     // Render StudentDashboard if authenticated
     if (authenticated) {
-        return <StudentDashboard />;
+        return <StudentDashboard id ={student_id} />;
     }
 
     return (

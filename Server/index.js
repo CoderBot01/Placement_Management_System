@@ -70,15 +70,27 @@ app.get('/coordinator/jobs', async (req, res) => {
 });
 
 app.post('/coordinator/jobs', async (req, res) => {
-    const { jobTitle, jobDescription, companyInfo, salary } = req.body;
-    if (!jobTitle || !jobDescription || !companyInfo || !salary) {
+
+    const { job_title, job_description, company_info, salary } = req.body;
+    if (!job_title || !job_description || !company_info || !salary) {
         return res.status(400).json({ error: 'All fields are required' });
     }
     try {
-        await database.insertData('jobs', { jobTitle, jobDescription, companyInfo, salary });
+        await database.insertData('jobs', { job_title, job_description, company_info, salary });
         res.status(201).json({ message: 'Job added successfully' });
     } catch (err) {
         console.error('Error inserting job data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.delete('/coordinator/jobs/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await database.deleteData('jobs', {id });
+        res.json({ message: 'Job deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting job data', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
@@ -153,6 +165,7 @@ app.post('/student/login', async (req, res) => {
     }
 });
 
+
 app.get('/student/jobs', async (req, res) => {
     try {
         const jobs = await database.getAll('jobs');
@@ -168,6 +181,36 @@ app.get('/student/jobs', async (req, res) => {
 app.get('/', (req, res) => {
     res.send('Welcome to the Placement Coordinator API');
 });
+
+app.get('/jobs', async (req, res) => {
+    const { skill, location } = req.query;
+    const url = `https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=${skill}&location=${location}`;
+    
+    try {
+      const response = await axios.get(url);
+      res.json(response.data);
+    }catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+      
+    }
+  );
+
+
+app.get('/student/StudentInformation/:student_id', async (req, res) => {
+    console.log('Getting student information');
+    const { student_id } = req.params;
+    try {
+        const data = await database.getWhere('students', { student_id });
+        console.log(data);
+        res.json(data);        
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

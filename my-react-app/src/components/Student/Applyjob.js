@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getData, postData, deleteData } from './functions';
 
 class ApplyForJobPage extends React.Component {
     constructor(props) {
@@ -14,7 +15,7 @@ class ApplyForJobPage extends React.Component {
 
     fetchJobs = async () => {
         try {
-            const response = await fetch('http://localhost:3000/jobs');
+            const response = await getData('/jobs')
             if (!response.ok) {
                 throw new Error('Failed to fetch jobs');
             }

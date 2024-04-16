@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import "./job.css";
-import { getData } from './functions';
+import { getData, postData, deleteData } from './functions';
 
 function JobPostingForm() {
     const [jobs, setJobs] = useState([]);
-    const [jobTitle, setJobTitle] = useState('');
-    const [jobDescription, setJobDescription] = useState('');
-    const [companyInfo, setCompanyInfo] = useState('');
+    const [job_title, setJobTitle] = useState('');
+    const [job_description, setJobDescription] = useState('');
+    const [company_info, setCompanyInfo] = useState('');
     const [salary, setSalary] = useState('');
 
     useEffect(() => {
@@ -30,16 +30,10 @@ function JobPostingForm() {
     const addJob = async (event) => {
         event.preventDefault(); // Prevent form submission
 
-        const newJob = { jobTitle, jobDescription, companyInfo, salary };
+        const newJob = { job_title, job_description, company_info, salary };
 
         try {
-            const addResponse = await fetch('http://localhost:3000/jobs', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newJob),
-            });
+            const addResponse = await postData('/jobs', newJob);
 
             if (!addResponse.ok) {
                 throw new Error('Failed to add Job');
@@ -56,23 +50,32 @@ function JobPostingForm() {
         }
     };
 
-    const handleDeleteJob = async (jobId) => {
+    const handleDeleteJob = async (id) => {
         try {
-            const deleteResponse = await fetch(`http://localhost:3000/jobs/${jobId}`, {
-                method: 'DELETE',
-            });
+            const deleteResponse = await deleteData(`/jobs/${id}`);
             if (!deleteResponse.ok) {
                 throw new Error('Failed to delete job');
             }
-            await fetchJobs();
+            // If deletion is successful, trigger auto-refresh
+            await handleRefreshJobs();
         } catch (error) {
             console.error('Error deleting job:', error);
         }
     };
-
+    
     const handleRefreshJobs = async () => {
-        await fetchJobs();
+        try {
+            // Fetch updated job data
+            await fetchJobs();
+            // Optionally, perform any additional actions after refreshing
+            // For example, updating UI components or displaying a success message
+        } catch (error) {
+            console.error('Error refreshing jobs:', error);
+        }
     };
+    
+
+    
 
     return (
         <div>
@@ -80,11 +83,11 @@ function JobPostingForm() {
             <h2 align="center">Post a Job</h2>
             <form onSubmit={addJob}>
                 <label htmlFor="jobTitle">Job Title:</label><br />
-                <input type="text" id="jobTitle" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required /><br />
+                <input type="text" id="jobTitle" value={job_title} onChange={(e) => setJobTitle(e.target.value)} required /><br />
                 <label htmlFor="jobDescription">Job Description:</label><br />
-                <textarea id="jobDescription" value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} required></textarea><br />
+                <textarea id="jobDescription" value={job_description} onChange={(e) => setJobDescription(e.target.value)} required></textarea><br />
                 <label htmlFor="companyInfo">Company Information:</label><br />
-                <textarea id="companyInfo" value={companyInfo} onChange={(e) => setCompanyInfo(e.target.value)} required></textarea><br />
+                <textarea id="companyInfo" value={company_info} onChange={(e) => setCompanyInfo(e.target.value)} required></textarea><br />
                 <label htmlFor="salary">Salary:</label><br />
                 <input type="text" id="salary" value={salary} onChange={(e) => setSalary(e.target.value)} required /><br />
                 <button type="submit">Post Job</button>

@@ -15,6 +15,7 @@ import ProgressTracker from "./components/Placement_coor/Progress";
 import InterviewScheduler from "./components/Placement_coor/Schedule";
 import LoginPage from "./components/Student/Login";
 import LoginPage1 from "./components/Placement_coor/Pla_Login";
+import recommend from "./components/Student/Recommend";
 
 
 export default function App() {
@@ -82,6 +83,10 @@ export default function App() {
              <Route
             path="/InterviewScheduler"
             element={<InterviewScheduler {...formData} />}
+            />
+             <Route
+            path="/jobrecommend"
+            element={<recommend {...formData} />}
             />
 
         </Routes>
