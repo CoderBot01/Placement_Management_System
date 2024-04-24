@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import "./Interview.css"
+import { getData, postData, deleteData } from './functions';
+
 
 class InterviewAt extends React.Component {
     constructor(props) {
@@ -17,7 +19,7 @@ class InterviewAt extends React.Component {
 
     fetchInterviews = async () => {
         try {
-            const response = await fetch('http://localhost:3000/Interviews');
+            const response = await getData('/interviews');
             if (!response.ok) {
                 throw new Error('Failed to fetch interviews');
             }
@@ -32,7 +34,7 @@ class InterviewAt extends React.Component {
     applyForInterview = (id) => {
         const interview = this.state.interviews.find(interview => interview.id === id);
         if (interview) {
-            alert("You have applied for the interview for " + interview.interviewTitle + " at " + interview.companyName);
+            alert("You have applied for the interview for " + interview.interview_title + " at " + interview.company_name);
         } else {
             console.error("Interview not found");
         }
@@ -68,10 +70,10 @@ class InterviewAt extends React.Component {
 
 const InterviewColumn = ({ interview, applyForInterview }) => (
     <div className="interview-item">
-        <div><strong>Interview Title:</strong> {interview.interviewTitle}</div>
-        <div><strong>Company Name:</strong> {interview.companyName}</div>
-        <div><strong>Student Name:</strong> {interview.studentName}</div>
-        <div><strong>Interview Session:</strong> {interview.interviewSession}</div>
+        <div><strong>Interview Title:</strong> {interview.interview_title}</div>
+        <div><strong>Company Name:</strong> {interview.company_name}</div>
+        <div><strong>Student Name:</strong> {interview.student_name}</div>
+        <div><strong>Interview Session:</strong> {interview.interview_session}</div>
         <div><strong>Link:</strong> {interview.link}</div>
         <button onClick={() => applyForInterview(interview.id)}>Apply</button>
     </div>

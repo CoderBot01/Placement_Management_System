@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import './Login.css'; // Import CSS for styling
-import Login from "./Login.jpg";
+import './Login.css'; // Import CSS for custom styling
+import LoginImage from "./Login.jpg"; // Make sure to import the image correctly
 import BaseUrl from './Constant';
 import StudentDashboard from './StudentDashboard'; // Import the Student Dashboard component
+import { postData } from './functions'; // Only import necessary functions
 
 function LoginPage() {
     const [student_id, setStudent_id] = useState('');
-    const [dob , setDob] = useState('');
+    const [dob, setDob] = useState('');
     const [error, setError] = useState('');
     const [authenticated, setAuthenticated] = useState(false); // State to manage authentication
 
@@ -38,36 +39,46 @@ function LoginPage() {
 
     // Render StudentDashboard if authenticated
     if (authenticated) {
-        return <StudentDashboard id ={student_id} />;
+        return <StudentDashboard id={student_id} />;
     }
 
     return (
-        <div>
-            <h2>Login Form</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="username">Student Id:</label>
-                    <input
-                        type="text"
-                        id="student_id"
-                        value={student_id}
-                        onChange={(e) => setStudent_id(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label htmlFor="dob">DOB:</label>
-                    <input
-                        type="date"
-                        id="dob"
-                        value={dob}
-                        onChange={(e) => setDob(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            {error && <p>{error}</p>}
+        <div className="login-container position-relative">
+            <img src={LoginImage} alt="Login" className="background-image img-fluid" />
+            <div className="login-text position-absolute top-50 start-50 translate-middle text-center">
+                <h1 className="text-white1">Student Login Form</h1>
+                <h1 className="text-white">Let's begin to discover a training and development of skills </h1>
+                <h1 className="text-white2">and enhance your career.</h1>
+            </div>
+            <div className="login-box">
+                <h2>Login Form</h2>
+                <form onSubmit={handleSubmit}>
+                    <div className="mb-3">
+                        <label htmlFor="student_id" className="form-label">Student Id:</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            id="student_id"
+                            value={student_id}
+                            onChange={(e) => setStudent_id(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="dob" className="form-label">DOB:</label>
+                        <input
+                            type="date"
+                            className="form-control"
+                            id="dob"
+                            value={dob}
+                            onChange={(e) => setDob(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <button type="submit" className="btn btn-primary">Login</button>
+                </form>
+                {error && <p className="text-danger mt-3">{error}</p>}
+            </div>
         </div>
     );
 }

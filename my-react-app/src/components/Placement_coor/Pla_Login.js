@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BaseUrl from './Constant';
 import PlacementDash from './PlacementDash';
-import './Login.css';
 import image from './Login.jpg';
 
 function LoginPage1() {
@@ -44,38 +43,40 @@ function LoginPage1() {
     }
 
     return (
-        <div style={{ 
-            backgroundImage: "url('image')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-}}>
-            <div className="login-page-container">
-                <div className="login-form-container">
-                    <h2>COORDINATOR LOGIN</h2>
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label htmlFor="username">Username:</label>
-                            <input
-                                type="text"
-                                id="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                required
-                            />
+        <div className="container">
+            <div className="row justify-content-center align-items-center" style={{ height: "100vh" }}>
+                <div className="col-md-6">
+                    <div className="card">
+                        <div className="card-body">
+                            <h2 className="card-title text-center">COORDINATOR LOGIN</h2>
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="username">Username:</label>
+                                    <input
+                                        type="text"
+                                        id="username"
+                                        className="form-control"
+                                        value={username}
+                                        onChange={(e) => setUsername(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="password">Password:</label>
+                                    <input
+                                        type="password"
+                                        id="password"
+                                        className="form-control"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        required
+                                    />
+                                </div>
+                                <button type="submit" className="btn btn-primary btn-block">Login</button>
+                            </form>
+                            {error && <p className="error-message">{error}</p>}
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="password">Password:</label>
-                            <input
-                                type="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <button type="submit">Login</button>
-                    </form>
-                    {error && <p className="error-message">{error}</p>}
+                    </div>
                 </div>
             </div>
         </div>

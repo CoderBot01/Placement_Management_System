@@ -37,20 +37,14 @@ export default function App() {
           <Route path="/service" element={<Service />} />
           <Route path="/contact" element={<Contact />} />
          
-          <Route
-            path="/login"
-            element={<LoginForm onSubmit={handleFormSubmit} />}
-          />
+          <Route path="/LoginPage" element={<LoginPage onFormSubmit={handleFormSubmit} />} />
+          <Route path="/LoginPage1" element={<LoginPage1 onFormSubmit={handleFormSubmit} />} />
          
-          <Route path="/Login" element={<LoginForm />} />
           <Route
             path="/StudentDashboard"
             element={<StudentDashboard {...formData} />}
           />
-          <Route
-          path="/LoginPage1"
-          element={<LoginPage1 {...formData} />}
-        />
+         
            <Route
             path="/PlacementDash"
             element={<PlacementDash {...formData} />}
@@ -64,10 +58,7 @@ export default function App() {
             path="/StudentManagement"
             element={<StudentManagement {...formData} />}
             />
-            <Route
-            path="/LoginPage"
-            element={<LoginPage {...formData} />}
-            />
+            
             <Route
             path="/JobPostingForm"
             element={<JobPostingForm {...formData} />}

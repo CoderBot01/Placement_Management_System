@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { getData, postData, deleteData } from './functions';
 
-const API_URL = 'http://localhost:3000/Interviews';
+
 
 function InterviewScheduler() {
     const [interviews, setInterviews] = useState([]);
     const [formData, setFormData] = useState({
-        studentName: '',
-        companyName: '',
-        interviewTitle: '',
-        interviewSession: '',
+        student_id: '',
+        student_name: '',
+        company_name: '',
+        interview_title: '',
+        interview_session: '',
         link: ''
     });
     const [loading, setLoading] = useState(false);
-    const { studentName, companyName, interviewTitle, interviewSession, link } = formData;
+    const { student_id, student_name, company_name, interview_title, interview_session, link } = formData;
 
     useEffect(() => {
         fetchStudentInterviews();
@@ -21,7 +23,7 @@ function InterviewScheduler() {
     const fetchStudentInterviews = async () => {
         setLoading(true);
         try {
-            const response = await fetch(API_URL);
+            const response = await getData('/interviews');
             if (!response.ok) {
                 throw new Error('Failed to fetch student interviews');
             }
@@ -37,14 +39,7 @@ function InterviewScheduler() {
     const addStudentInterview = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
+            const response = await postData('/interviews', formData);
             if (!response.ok) {
                 throw new Error('Failed to add student interview');
             }
@@ -58,12 +53,7 @@ function InterviewScheduler() {
 
     const handleDeleteInterview = async (id) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`, {
-                method: 'DELETE',
-            });
-            if (!response.ok) {
-                throw new Error('Failed to delete student interview');
-            }
+            const response = await deleteData(`/interviews/${id}`);
             await fetchStudentInterviews();
         } catch (error) {
             console.error('Error deleting student interview:', error.message);
@@ -72,10 +62,11 @@ function InterviewScheduler() {
 
     const resetForm = () => {
         setFormData({
-            studentName: '',
-            companyName: '',
-            interviewTitle: '',
-            interviewSession: '',
+            student_id: '',
+            student_name: '',
+            company_name: '',
+            interview_title: '',
+            interview_session: '',
             link: ''
         });
     };
@@ -85,12 +76,14 @@ function InterviewScheduler() {
             <h1>Student Interview Management System</h1>
             <h2 align="center">Schedule Student Interview</h2>
             <form onSubmit={addStudentInterview}>
-                <label htmlFor="studentName">Student Name:</label><br />
-                <input type="text" id="studentName" value={studentName} onChange={(e) => setFormData({ ...formData, studentName: e.target.value })} required /><br />
-                <label htmlFor="companyName">Company Name:</label><br />
-                <input type="text" id="companyName" value={companyName} onChange={(e) => setFormData({ ...formData, companyName: e.target.value })} required /><br />
+            <label htmlFor="id">ID:</label><br />
+                <input type="text" id="id" value={student_id} onChange={(e) => setFormData({ ...formData, student_id: e.target.value })} required /><br />
+                <label htmlFor="student_name">Student Name:</label><br />
+                <input type="text" id="student_name" value={student_name} onChange={(e) => setFormData({ ...formData, student_name: e.target.value })} required /><br />
+                <label htmlFor="company_name">Company Name:</label><br />
+                <input type="text" id="company_name" value={company_name} onChange={(e) => setFormData({ ...formData, company_name: e.target.value })} required /><br />
                 <label htmlFor="interviewType">Interview Type:</label><br />
-                <select id="interviewType" value={interviewTitle} onChange={(e) => setFormData({ ...formData, interviewTitle: e.target.value })} required>
+                <select id="interviewType" value={interview_title} onChange={(e) => setFormData({ ...formData, interview_title: e.target.value })} required>
                     <option value="">Select an interview type</option>
                     <option value="Aptitude Round">Aptitude Round</option>
                     <option value="Technical Round">Technical Round</option>
@@ -99,8 +92,8 @@ function InterviewScheduler() {
                     <option value="On-spot Articulation Round">On-spot Articulation Round</option>
                 </select><br />
 
-                <label htmlFor="interviewSession">Interview Session:</label><br />
-                <input type="datetime-local" id="interviewSession" value={interviewSession} onChange={(e) => setFormData({ ...formData, interviewSession: e.target.value })} required /><br />
+                <label htmlFor="interview_session">Interview Session:</label><br />
+                <input type="datetime-local" id="interview_session" value={interview_session} onChange={(e) => setFormData({ ...formData, interview_session: e.target.value })} required /><br />
                 <label htmlFor="link">Link:</label><br />
                 <input type="text" id="link" value={link} onChange={(e) => setFormData({ ...formData, link: e.target.value })} required /><br />
                 <button type="submit">Schedule Interview</button>
@@ -126,10 +119,9 @@ function InterviewScheduler() {
                         <tbody>
                             {interviews.map(interview => (
                                 <tr key={interview.id}>
-                                    <td>{interview.studentname}</td>
-                                    <td>{interview.studentname}</td>
-                                    <td>{interview.interviewtitle}</td>
-                                    <td>{interview.interviewsession}</td>
+                                    <td>{interview.student_name}</td>
+                                    <td>{interview.interview_title}</td>
+                                    <td>{interview.interview_session}</td>
                                     <td>{interview.link}</td>
                                     <td><button onClick={() => handleDeleteInterview(interview.id)}>Delete</button></td>
                                 </tr>

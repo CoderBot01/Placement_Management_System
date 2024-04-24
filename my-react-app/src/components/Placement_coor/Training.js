@@ -3,6 +3,8 @@ import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import './Train.css'; // Import your CSS file
+import { getData, postData, deleteData } from './functions';
+
 
 function TrainingPage() {
   const [trainings, setTrainings] = useState([]);
@@ -17,7 +19,7 @@ function TrainingPage() {
 
   const fetchTrainings = async () => {
     try {
-      const response = await fetch('http://localhost:3000/trainings');
+      const response = await getData('/trainings');
       if (!response.ok) {
         throw new Error('Failed to fetch Training Details');
       }
@@ -34,13 +36,7 @@ function TrainingPage() {
     const newTraining = { title, description, duration, fees };
 
     try {
-      const addResponse = await fetch('http://localhost:3000/trainings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newTraining),
-      });
+      const addResponse = await postData('/trainings', newTraining);
 
       if (!addResponse.ok) {
         throw new Error('Failed to add Training');
@@ -59,9 +55,7 @@ function TrainingPage() {
 
   const handleDeleteTraining = async (id) => {
     try {
-      const response = await fetch(`http://localhost:3000/trainings/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await deleteData(`/trainings/${id}`);
       if (!response.ok) {
         throw new Error('Failed to delete Training');
       }

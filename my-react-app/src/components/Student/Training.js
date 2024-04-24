@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import './Train.css';
+import { getData, postData, deleteData } from './functions';
+
 
 class TrainingDevelopmentPage extends Component {
     constructor(props) {
@@ -15,7 +17,7 @@ class TrainingDevelopmentPage extends Component {
 
     fetchTrainings = async () => {
         try {
-            const response = await fetch('http://localhost:3000/trainings');
+            const response = await getData('/trainings');
             if (!response.ok) {
                 throw new Error('Failed to fetch Trainings');
             }

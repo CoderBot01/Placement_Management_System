@@ -134,6 +134,83 @@ app.delete('/coordinator/student/:student_id', async (req, res) => {
     }
 });
 
+app.get('/coordinator/trainings', async (req, res) => {
+    try {
+        const data = await database.getAll('trainings');
+        res.json(data);        
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.post('/coordinator/trainings', async (req, res) => {
+    const { title, description, duration, fees } = req.body;
+    if (!title || !description || !duration || !fees) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    try {
+        await database.insertData('trainings', { title, description, duration, fees });
+        res.status(201).json({ message: 'Training added successfully' });
+    } catch (err) {
+        console.error('Error inserting training data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.delete('/coordinator/trainings/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await database.deleteData('trainings', { id });
+        res.json({ message: 'Training deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting training data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.get('/coordinator/interviews', async (req, res) => {
+    try {
+        const data = await database.getAll('interviews');
+        res.json(data);        
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.post('/coordinator/interviews', async (req, res) => {
+    const { student_id, student_name, company_name, interview_title, interview_session, link } = req.body;
+    if (!student_id || !student_name || !company_name || !interview_title || !interview_session || !link) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    try {
+        await database.insertData('interviews', { student_id, student_name, company_name, interview_title, interview_session, link });
+        res.status(201).json({ message: 'Interview added successfully' });
+    } catch (err) {
+        console.error('Error inserting interview data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.delete('/coordinator/interviews/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await database.deleteData('interviews', { id });
+        res.json({ message: 'Interview deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting interview data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+
+
 
 
 
@@ -210,6 +287,81 @@ app.get('/student/StudentInformation/:student_id', async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+app.get('/student/trainings', async (req, res) => {
+    try {
+        const data = await database.getAll('trainings');
+        res.json(data);        
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.post('/student/trainings/:id', async (req, res) => {
+    const { id } = req.params;
+    const { student_id } = req.user;
+    try {
+        await database.insertData('student_trainings', { student_id, training_id: id });
+        res.status(201).json({ message: 'Training applied successfully' });
+    } catch (err) {
+        console.error('Error applying for training', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.get('/student/interviews', async (req, res) => {
+    try {
+        const data = await database.getAll('interviews');
+        res.json(data);        
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.post('/student/interviews/:id', async (req, res) => {
+    const { id } = req.params;
+    const { student_id } = req.user;
+    try {
+        await database.insertData('student_interviews', { student_id, interview_id: id });
+        res.status(201).json({ message: 'Interview applied successfully' });
+    } catch (err) {
+        console.error('Error applying for interview', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.get('/student/studentinformation/:student_id', async (req, res) => {
+    const { student_id } = req.params;
+    try {
+        const data = await database.getWhere('students', { student_id });
+        res.json(data);
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.post('/student/studentinformation/:student_id', async (req, res) => {
+    const { student_id } = req.params;
+    const { ID, fullName, dateOfBirth, email, phone, address, bio, gpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, references } = req.body;
+    if (!ID || !fullName || !dateOfBirth || !email || !phone || !address || !bio || !gpa || !awards || !scholarships || !extracurricularActivities || !technicalSkills || !softSkills || !languageProficiency || !certification || !completionDate || !issuingOrganization || !course1 || !course1Grade || !course2 || !course2Grade || !course3 || !course3Grade || !transcripts || !researchProjects || !portfolioProjects || !portfolioLinks || !sportsInvolvement || !clubs || !volunteerWork || !leadershipRoles || !internships || !partTimeJobs || !workExperience || !references) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    try {
+        await database.updateData('students', { student_id }, { ID, fullName, dateOfBirth, email, phone, address, bio, gpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, references });
+        res.json({ message: 'Student information updated successfully' });
+    } catch (err) {
+        console.error('Error updating student information', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
 
 
 app.listen(PORT, () => {
