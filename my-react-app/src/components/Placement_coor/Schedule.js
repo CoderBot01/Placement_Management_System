@@ -120,6 +120,7 @@ function InterviewScheduler() {
                             {interviews.map(interview => (
                                 <tr key={interview.id}>
                                     <td>{interview.student_name}</td>
+                                    <td>{interview.company_name}</td>
                                     <td>{interview.interview_title}</td>
                                     <td>{interview.interview_session}</td>
                                     <td>{interview.link}</td>

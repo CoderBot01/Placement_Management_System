@@ -1,137 +1,185 @@
 import React, { useState } from 'react';
+import { postData, deleteData } from './functions';
 
 function EmployerPage() {
-  const [formData, setFormData] = useState({
-    companyName: '',
-    companyAddress: '',
-    companyCity: '',
-    companyState: '',
-    companyZip: '',
-    companyPhone: '',
-    companyEmail: '',
-    companyWebsite: '',
-    companyDescription: '',
-    companyLogo: '',
-    companyBanner: '',
-    companyIndustry: '',
-    companySize: '',
-    companyType: '',
-    companyFounded: '',
-    companySpecialties: '',
-    companyBenefits: '',
-    companyCulture: '',
-    companyValues: '',
-    companyMissionStatement: '',
-    companyVisionStatement: '',
-    companyGoals: '',
-    companySocialMediaLinks: '',
-    companyReferences: ''
-  });
+  const [employers, setEmployers] = useState([]);
+  const [companyName, setCompanyName] = useState('');
+  const [address, setAddress] = useState('');
+  const [about, setAbout] = useState('');
+  const [hrName, setHrName] = useState('');
+  const [contactDetails, setContactDetails] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
-      [name]: value
-    }));
+  const handleInputChange = (event, field) => {
+    const value = event.target.value;
+    switch (field) {
+      case 'companyName':
+        setCompanyName(value);
+        break;
+      case 'address':
+        setAddress(value);
+        break;
+      case 'about':
+        setAbout(value);
+        break;
+      case 'hrName':
+        setHrName(value);
+        break;
+      case 'contactDetails':
+        setContactDetails(value);
+        break;
+      default:
+        break;
+    }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Here you can handle the submission of the form data
-    // For example, you can make a POST request to your backend API to save the data
-    console.log(formData);
-    // Reset form data after submission
-    setFormData({
-      companyName: '',
-      companyAddress: '',
-      companyCity: '',
-      companyState: '',
-      companyZip: '',
-      companyPhone: '',
-      companyEmail: '',
-      companyWebsite: '',
-      companyDescription: '',
-      companyLogo: '',
-      companyBanner: '',
-      companyIndustry: '',
-      companySize: '',
-      companyType: '',
-      companyFounded: '',
-      companySpecialties: '',
-      companyBenefits: '',
-      companyCulture: '',
-      companyValues: '',
-      companyMissionStatement: '',
-      companyVisionStatement: '',
-      companyGoals: '',
-      companySocialMediaLinks: '',
-      companyReferences: ''
-    });
-  };
+  const fetchStudents = async () => {
+    try {
+        const response = await getData('/jobs');
+        if (!response.ok) {
+            throw new Error('Failed to fetch students. Server returned status: ' + response.status);
+        }
+        const data = await response.json();
+        setStudents(data);
+    } catch (error) {
+        console.error('Error fetching students:', error);
+        setAlertMessage('Failed to fetch students. Please try again later.');
+    }
+};
+
+const addEmployer = async () => {
+    const newEmployer = {employer: companyName, companyName, address, about, hrName, contactDetails};
+
+
+    try {
+        const addResponse = await postData('/employers', newEmployer);
+        if (!addResponse.ok) {
+            throw new Error('Failed to add emplyer');
+        }
+
+        fetchEmployer();
+
+        setEmployers([...employers, newEmployer]);
+        setCompanyName('');
+        setAddress('');
+        setAbout('');
+        setHrName('');
+        setContactDetails('');
+    } catch (error) {
+
+        console.error('Error adding employer:', error);
+    }
+};
+
+const deleteEmployer = async (index) => {
+    const employer = employers[index];
+    try {
+        const deleteResponse = await deleteData('/employers', employer);
+        if (!deleteResponse.ok) {
+            throw new Error('Failed to delete employer');
+        } 
+        fetchEmployer();
+    }
+    catch (error) {
+        console.error('Error deleting employer:', error);
+    }
+}
+
+const fetchEmployer = async () => {
+    try {
+        const response = await getData('/employers');
+        if (!response.ok) {
+            throw new Error('Failed to fetch employers. Server returned status: ' + response.status);
+        }
+        const data = await response.json();
+        setEmployers(data);
+    } catch (error) {
+        console.error('Error fetching employers:', error);
+    }
+}
+
+
+
 
   return (
-    <div>
-      <h2>Add Employer Information</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Input fields for employer information */}
-        {/* Example: */}
-        <input type="text" name="companyName" value={formData.companyName} onChange={handleChange} placeholder="Company Name" required />
-        <input type="text" name="companyAddress" value={formData.companyAddress} onChange={handleChange} placeholder="Company Address" />
-        {/* Add other input fields for the rest of the data */}
-        <input type="text" name="companyCity" value={formData.companyCity} onChange={handleChange} placeholder="Company City" />
-        <input type="text" name="companyState" value={formData.companyState} onChange={handleChange} placeholder="Company State" />
-        <input type="text" name="companyZip" value={formData.companyZip} onChange={handleChange} placeholder="Company Zip" />
-        <input type="text" name="companyPhone" value={formData.companyPhone} onChange={handleChange} placeholder="Company Phone" />
-        <input type="email" name="companyEmail" value={formData.companyEmail} onChange={handleChange} placeholder="Company Email" />
-        <input type="text" name="companyWebsite" value={formData.companyWebsite} onChange={handleChange} placeholder="Company Website" />
-        <textarea name="companyDescription" value={formData.companyDescription} onChange={handleChange} placeholder="Company Description"></textarea>
-        {/* Add other input fields similarly for the rest of the data */}
-        <input type="text" name="companyLogo" value={formData.companyLogo} onChange={handleChange} placeholder="Company Logo" />
-        <input type="text" name="companyBanner" value={formData.companyBanner} onChange={handleChange} placeholder="Company Banner" />
-        <input type="text" name="companyIndustry" value={formData.companyIndustry} onChange={handleChange} placeholder="Company Industry" />
-        <input type="text" name="companySize" value={formData.companySize} onChange={handleChange} placeholder="Company Size" />
-        <input type="text" name="companyType" value={formData.companyType} onChange={handleChange} placeholder="Company Type" />
-        <input type="date" name="companyFounded" value={formData.companyFounded} onChange={handleChange} placeholder="Company Founded" />
-        <input type="text" name="companySpecialties" value={formData.companySpecialties} onChange={handleChange} placeholder="Company Specialties" />
-        <input type="text" name="companyBenefits" value={formData.companyBenefits} onChange={handleChange} placeholder="Company Benefits" />
-        <input type="text" name="companyCulture" value={formData.companyCulture} onChange={handleChange} placeholder="Company Culture" />
-        <input type="text" name="companyValues" value={formData.companyValues} onChange={handleChange} placeholder="Company Values" />
-        <input type="text" name="companyMissionStatement" value={formData.companyMissionStatement} onChange={handleChange} placeholder="Company Mission Statement" />
-        <input type="text" name="companyVisionStatement" value={formData.companyVisionStatement} onChange={handleChange} placeholder="Company Vision Statement" />
-        <input type="text" name="companyGoals" value={formData.companyGoals} onChange={handleChange} placeholder="Company Goals" />
-        <input type="text" name="companySocialMediaLinks" value={formData.companySocialMediaLinks} onChange={handleChange} placeholder="Company Social Media Links" />
-        <input type="text" name="companyReferences" value={formData.companyReferences} onChange={handleChange} placeholder="Company References" />
-
-        {/* Add other input fields for the rest of the data */}
-        <button type="submit">Submit</button>
-      </form>
-      {/* Display submitted employer information */}
-      <div>
-        <h2>Employer Information</h2>
-        {/* Display the submitted data here */}
-        {/* Example: */}
-        <p>Company Name: {formData.companyName}</p>
-        <p>Company Address: {formData.companyAddress}</p>
-        {/* Add similar paragraphs for the rest of the data */}
-        <p>Company Logo: {formData.companyLogo}</p>
-        <p>Company Banner: {formData.companyBanner}</p>
-        <p>Company Industry: {formData.companyIndustry}</p>
-        <p>Company Size: {formData.companySize}</p>
-        <p>Company Type: {formData.companyType}</p>
-        <p>Company Founded: {formData.companyFounded}</p>
-        <p>Company Specialties: {formData.companySpecialties}</p>
-        <p>Company Benefits: {formData.companyBenefits}</p>
-        <p>Company Culture: {formData.companyCulture}</p>
-        <p>Company Values: {formData.companyValues}</p>
-        <p>Company Mission Statement: {formData.companyMissionStatement}</p>
-        <p>Company Vision Statement: {formData.companyVisionStatement}</p>
-        <p>Company Goals: {formData.companyGoals}</p>
-        <p>Company Social Media Links: {formData.companySocialMediaLinks}</p>
-        <p>Company References: {formData.companyReferences}</p>
-
-        {/* Add similar paragraphs for the rest of the data */}
+    <div className="container mt-5">
+      <h1 className="mb-4">Employer Details</h1>
+      <div className="mb-3">
+        <label htmlFor="companyName" className="form-label">Company Name:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="companyName"
+          value={companyName}
+          onChange={(event) => handleInputChange(event, 'companyName')}
+        />
       </div>
+      <div className="mb-3">
+        <label htmlFor="address" className="form-label">Address:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="address"
+          value={address}
+          onChange={(event) => handleInputChange(event, 'address')}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="about" className="form-label">About:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="about"
+          value={about}
+          onChange={(event) => handleInputChange(event, 'about')}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="hrName" className="form-label">HR Name:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="hrName"
+          value={hrName}
+          onChange={(event) => handleInputChange(event, 'hrName')}
+        />
+      </div>
+      <div className="mb-3">
+        <label htmlFor="contactDetails" className="form-label">Contact Details:</label>
+        <input
+          type="text"
+          className="form-control"
+          id="contactDetails"
+          value={contactDetails}
+          onChange={(event) => handleInputChange(event, 'contactDetails')}
+        />
+      </div>
+      <button className="btn btn-primary" onClick={addEmployer}>Add Employer</button>
+      <table className="table mt-4">
+        <thead>
+          <tr>
+            <th>Company Name</th>
+            <th>Address</th>
+            <th>About</th>
+            <th>HR Name</th>
+            <th>Contact Details</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employers.map((employer, index) => (
+            <tr key={index}>
+              <td>{employer.companyName}</td>
+              <td>{employer.address}</td>
+              <td>{employer.about}</td>
+              <td>{employer.hrName}</td>
+              <td>{employer.contactDetails}</td>
+              <td>
+                <button className="btn btn-danger" onClick={() => deleteEmployer(index)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

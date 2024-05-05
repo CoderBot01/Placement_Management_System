@@ -31,10 +31,9 @@
   margin-bottom: 20px;
 }
 
-.text-white{
+.t1{
   color:white;
   text-decoration: double;
-  text-shadow: 10px 10px 10px black;
   position: absolute;
   top: 40%;
   right: 40%;
@@ -43,27 +42,7 @@
   animation: ladder 10s linear infinite;
  
 }
-.text-white2{
-  color: white;
-  text-decoration: double;
-  text-shadow: 10px 10px 10px black;
-  position: absolute;
-  top: 50%;
-  right:40%;
-  display: block;
-  white-space: nowrap;
-  animation: ladder 10s linear infinite;
- 
-}
-.text-white1 {
-  color: white;
 
-  text-decoration: double;
-  text-shadow: 10px 10px 10px black;
-  position: absolute;
-  top:20%;
-  right: 70%;
-}
 
 @keyframes text {
   0% { transform: translateY(0); }

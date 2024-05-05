@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import "./Interview.css"
 import { getData, postData, deleteData } from './functions';
-
 
 class InterviewAt extends React.Component {
     constructor(props) {
@@ -53,30 +51,44 @@ class InterviewAt extends React.Component {
 
         return (
             <div className="container">
-                <h1>Available Interviews</h1>
-                <div className="interview-column">
-                    {interviews.map((interview) => (
-                        <InterviewColumn
-                            key={interview.id}
-                            interview={interview}
-                            applyForInterview={this.applyForInterview}
-                        />
-                    ))}
+                <h1 className="mt-4 mb-4 text-black">Available Interviews</h1>
+                <div className="table-responsive">
+                    <table className="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Interview Title</th>
+                                <th>Company Name</th>
+                                <th>Student Name</th>
+                                <th>Interview Session</th>
+                                <th>Link</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {interviews.map((interview) => (
+                                <InterviewRow
+                                    key={interview.id}
+                                    interview={interview}
+                                    applyForInterview={this.applyForInterview}
+                                />
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         );
     }
 }
 
-const InterviewColumn = ({ interview, applyForInterview }) => (
-    <div className="interview-item">
-        <div><strong>Interview Title:</strong> {interview.interview_title}</div>
-        <div><strong>Company Name:</strong> {interview.company_name}</div>
-        <div><strong>Student Name:</strong> {interview.student_name}</div>
-        <div><strong>Interview Session:</strong> {interview.interview_session}</div>
-        <div><strong>Link:</strong> {interview.link}</div>
-        <button onClick={() => applyForInterview(interview.id)}>Apply</button>
-    </div>
+const InterviewRow = ({ interview, applyForInterview }) => (
+    <tr>
+        <td>{interview.interview_title}</td>
+        <td>{interview.company_name}</td>
+        <td>{interview.student_name}</td>
+        <td>{interview.interview_session}</td>
+        <td><a href={interview.link}>{interview.link}</a></td>
+        <td><button className="btn btn-primary" onClick={() => applyForInterview(interview.id)}>Apply</button></td>
+    </tr>
 );
 
 export default InterviewAt;

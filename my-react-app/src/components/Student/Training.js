@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './Train.css';
 import { getData, postData, deleteData } from './functions';
 
-
 class TrainingDevelopmentPage extends Component {
     constructor(props) {
         super(props);
@@ -40,11 +39,11 @@ class TrainingDevelopmentPage extends Component {
     render() {
         return (
             <div className="container">
-                <h1>Available Trainings</h1>
-                <div className="tables-container">
+                <h1 className="mt-4 mb-4 text-black">Available Trainings</h1>
+                <div className="table-responsive">
                     {this.state.trainings.map((training, index) => (
-                        <table key={index} className="training-table">
-                            <thead>
+                        <table key={index} className="table table-striped table-bordered">
+                            <thead className="thead-dark">
                                 <tr>
                                     <th colSpan="2">{training.title}</th>
                                 </tr>
@@ -64,7 +63,7 @@ class TrainingDevelopmentPage extends Component {
                                 </tr>
                                 <tr>
                                     <td colSpan="2">
-                                        <button onClick={() => this.applyForTraining(training.id)}>Register</button>
+                                        <button className="btn btn-primary" onClick={() => this.applyForTraining(training.id)}>Register</button>
                                     </td>
                                 </tr>
                             </tbody>

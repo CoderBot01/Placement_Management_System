@@ -209,6 +209,45 @@ app.delete('/coordinator/interviews/:id', async (req, res) => {
 }
 );
 
+app.get('/coordinator/employers', async (req, res) => {
+    try {
+        const data = await database.getAll('employers');
+        res.json(data);        
+    } catch (err) {
+        console.error('Error getting data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.post('/coordinator/employers', async (req, res) => {
+    const { employer,companyName,address, about, hrName, contactDetails } = req.body;
+    if (!employer || !companyName || !address || !about || !hrName || !contactDetails) {
+        return res.status(400).json({ error: 'All fields are required' });
+    }
+    try {
+        await database.insertData('employers', { employer, companyName, address, about, hrName, contactDetails});
+        res.status(201).json({ message: 'Employer added successfully' });
+    } catch (err) {
+        console.error('Error inserting employer data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+app.delete('/coordinator/employers/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await database.deleteData('employers', { id });
+        res.json({ message: 'Employer deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting employer data', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+);
+
+
 
 
 
@@ -276,11 +315,9 @@ app.get('/jobs', async (req, res) => {
 
 
 app.get('/student/StudentInformation/:student_id', async (req, res) => {
-    console.log('Getting student information');
     const { student_id } = req.params;
     try {
         const data = await database.getWhere('students', { student_id });
-        console.log(data);
         res.json(data);        
     } catch (err) {
         console.error('Error getting data', err);
@@ -348,13 +385,14 @@ app.get('/student/studentinformation/:student_id', async (req, res) => {
 );
 
 app.post('/student/studentinformation/:student_id', async (req, res) => {
-    const { student_id } = req.params;
-    const { ID, fullName, dateOfBirth, email, phone, address, bio, gpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, references } = req.body;
-    if (!ID || !fullName || !dateOfBirth || !email || !phone || !address || !bio || !gpa || !awards || !scholarships || !extracurricularActivities || !technicalSkills || !softSkills || !languageProficiency || !certification || !completionDate || !issuingOrganization || !course1 || !course1Grade || !course2 || !course2Grade || !course3 || !course3Grade || !transcripts || !researchProjects || !portfolioProjects || !portfolioLinks || !sportsInvolvement || !clubs || !volunteerWork || !leadershipRoles || !internships || !partTimeJobs || !workExperience || !references) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
+   
+    const { id, student_id, dob, name, email, year, department, phone, address, password, bio, cgpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, student_references } = req.body;
+    console.log('Updating student information:',student_id);
+    // if (!ID || !fullName || !dateOfBirth || !email || !phone || !address || !bio || !gpa || !awards || !scholarships || !extracurricularActivities || !technicalSkills || !softSkills || !languageProficiency || !certification || !completionDate || !issuingOrganization || !course1 || !course1Grade || !course2 || !course2Grade || !course3 || !course3Grade || !transcripts || !researchProjects || !portfolioProjects || !portfolioLinks || !sportsInvolvement || !clubs || !volunteerWork || !leadershipRoles || !internships || !partTimeJobs || !workExperience || !references) {
+    //     return res.status(400).json({ error: 'All fields are required' });
+    // }
     try {
-        await database.updateData('students', { student_id }, { ID, fullName, dateOfBirth, email, phone, address, bio, gpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, references });
+        await database.updateData('students', { student_id }, { dob, name, email, year, department, phone, address, password, bio, cgpa, awards, scholarships, extracurricularActivities, technicalSkills, softSkills, languageProficiency, certification, completionDate, issuingOrganization, course1, course1Grade, course2, course2Grade, course3, course3Grade, transcripts, researchProjects, portfolioProjects, portfolioLinks, sportsInvolvement, clubs, volunteerWork, leadershipRoles, internships, partTimeJobs, workExperience, student_references });
         res.json({ message: 'Student information updated successfully' });
     } catch (err) {
         console.error('Error updating student information', err);

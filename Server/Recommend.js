@@ -1,35 +1,35 @@
-import axios from "axios";
-import fs from "fs";
+import axios from 'axios';
 
-async function scrapeJobs() {
-    const url = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=java%20(Programming%20Language)&location=tiruchengode&geoId=1215229671&currentJobId=3415227738&position=1&pageNum=0&start=25";
+const searchJobs = async (keyword, location) => {
+  
 
-    try {
-        const response = await axios.get(url);
-        const jobs = response.data.data.elements;
-        const json_info = [];
-
-        jobs.forEach(job => {
-            const title = job.title.text;
-            const company = job.subtext.text;
-            const location = job.locationText;
-            const url = `https://www.linkedin.com/jobs/view/${job.jobPostingId}`;
-
-            const job_info = {
-                "title": title,
-                "company": company,
-                "location": location,
-                "url": url
-            };
-
-            json_info.push(job_info);
-        });
-
-        fs.writeFileSync('jobs.json', JSON.stringify(json_info, null, 4));
-        console.log('Jobs data has been scraped and saved to jobs.json.');
-    } catch (error) {
-        console.error('Error occurred while scraping jobs:', error);
+  const options = {
+    method: 'GET',
+    url: 'https://linkedin-api8.p.rapidapi.com/search-jobs',
+    params: {
+      keywords: keyword,
+      location: location,
+      datePosted: 'anyTime',
+      sort: 'mostRelevant',
+      remote: 'false'
+   
+    },
+    headers: {
+      'X-RapidAPI-Key': '1368737352mshcdb226e6cce563fp16b3fcjsnab74d043c9f6',
+      'X-RapidAPI-Host': 'linkedin-api8.p.rapidapi.com'
     }
-}
+  };
 
-export default scrapeJobs;
+  try {
+    const response = await axios.request(options);
+    return response.data;
+  } catch (error) {
+    throw new Error(`Error searching jobs: ${error}`);
+  }
+};
+
+searchJobs('python', 'chennai')
+  .then((jobs) => console.log(jobs))
+  .catch((error) => console.error(error));
+
+export default searchJobs;

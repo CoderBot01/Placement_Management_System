@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css'; // Import CSS for custom styling
 import LoginImage from "./Login.jpg"; // Make sure to import the image correctly
 import BaseUrl from './Constant';
 import StudentDashboard from './StudentDashboard'; // Import the Student Dashboard component
-import { postData } from './functions'; // Only import necessary functions
 
 function LoginPage() {
     const [student_id, setStudent_id] = useState('');
@@ -11,8 +10,14 @@ function LoginPage() {
     const [error, setError] = useState('');
     const [authenticated, setAuthenticated] = useState(false); // State to manage authentication
 
+    // Check for authentication status in local storage on component mount
+    useEffect(() => {
+        const isAuthenticated = localStorage.getItem('authenticated') === 'true';
+        setAuthenticated(isAuthenticated);
+    }, []);
+
     const handleSubmit = async (event) => {
-        event.preventDefault();
+        event.preventDefault(); // Prevent page refresh
 
         try {
             const response = await fetch(`${BaseUrl}/login`, {
@@ -46,9 +51,8 @@ function LoginPage() {
         <div className="login-container position-relative">
             <img src={LoginImage} alt="Login" className="background-image img-fluid" />
             <div className="login-text position-absolute top-50 start-50 translate-middle text-center">
-                <h1 className="text-white1">Student Login Form</h1>
-                <h1 className="text-white">Let's begin to discover a training and development of skills </h1>
-                <h1 className="text-white2">and enhance your career.</h1>
+                <h1 className="t1">Let's begin to discover a training and development of skills </h1>
+               
             </div>
             <div className="login-box">
                 <h2>Login Form</h2>
