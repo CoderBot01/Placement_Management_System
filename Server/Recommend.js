@@ -5,7 +5,7 @@ const searchJobs = async (keyword, location) => {
 
   const options = {
     method: 'GET',
-    url: 'https://linkedin-api8.p.rapidapi.com/search-jobs',
+    url: '',
     params: {
       keywords: keyword,
       location: location,
@@ -15,8 +15,8 @@ const searchJobs = async (keyword, location) => {
    
     },
     headers: {
-      'X-RapidAPI-Key': '1368737352mshcdb226e6cce563fp16b3fcjsnab74d043c9f6',
-      'X-RapidAPI-Host': 'linkedin-api8.p.rapidapi.com'
+      'X-RapidAPI-Key': '',
+      'X-RapidAPI-Host': ''
     }
   };
 
